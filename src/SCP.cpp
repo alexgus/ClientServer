@@ -3,25 +3,23 @@
  */
 
 #include <iostream>
+
 #include "Log.h"
+#include "Server.h"
 using namespace std;
 
 int main()
 {
 // Begin
 	// Declaration
-	Log log;
+	int fd;
+	Server *serv;
 
-
-// Test Log
-	log.write("Debug test", Log::DEBUG);
-	log.write("Warning test", Log::WARN);
-	log.write("Erreur test", Log::ERR);
-	log << "Without level";
-
-// Test display
-	cout << "Hello World !" << endl;
-
+// Test Serveur
+	serv = new Server();
+	fd = serv->acceptConnection();
+	serv->debug(fd);
+	serv->~Server();
 
 // End
 	return 0;
