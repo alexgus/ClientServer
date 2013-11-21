@@ -15,7 +15,7 @@ int main()
 	int fd;
 	Server *serv;
 
-// Test Serveur
+// Test Server
 	serv = new Server();
 	fd = serv->acceptConnection();
 	serv->debug(fd);
