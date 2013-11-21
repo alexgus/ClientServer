@@ -13,15 +13,17 @@ Server::Server()
 
 	fd_sock = socket(AF_INET, SOCK_STREAM, 0);
 
-	if(fd_sock == -1)
+	if(fd_sock == -1){
 		log.write("Socket creation error",Log::ERR); // TODO Add errno
-
+		cerr<<"Socket creation error"<<endl;
+	}
 	addr.sin_family = AF_INET;
 	addr.sin_addr.s_addr = htonl(INADDR_ANY); // Conversion big indian
 	addr.sin_port = htons(PORT);
 
 	if(bind(fd_sock,(struct sockaddr *) &addr, sizeof(addr)) == -1)
-		log.write("Bind error",Log::ERR); // TODO Add errno
+		log.write("Binding error",Log::ERR); // TODO Add errno
+		cerr<<"Binding error"<<endl;
 
 	listen(fd_sock, 5); // 5 = limit size of the connection queue
 }
