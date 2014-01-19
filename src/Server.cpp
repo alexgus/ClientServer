@@ -2,7 +2,7 @@
  * Server.cpp
  *
  *  Created on: 11 nov. 2013
- *      Author: alexandre
+ *      Author: Alexandre Guyon
  */
 
 #include "Server.h"
@@ -70,9 +70,22 @@ void Server::debug(int fd)
 	{
 		nbRead = read(fd,buf,TAILLE_BUF);
 		buf[nbRead] = '\0';
+
+		// Debug
 		cout << buf;
 
-		write(fd, "OK !\n\r", 6); // Ack
+		if(string(buf) == CMD_GET)
+		{
+			write(fd,(CMD_GET+"\n\r").c_str(),CMD_GET.size()+2);
+		}
+		else if(string(buf) == CMD_PUT)
+		{
+			write(fd,(CMD_PUT+"\n\r").c_str(),CMD_PUT.size()+2);
+		}
+		else
+		{
+			write(fd, "OK !\n\r", 6); // Ack
+		}
 	}
 
 	close(fd);

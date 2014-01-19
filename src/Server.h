@@ -25,16 +25,27 @@ using namespace std;
 
 class Server
 {
+public:
+	/**
+	 * Get an element
+	 */
+	const string CMD_GET = string("GET\r\n");
+
+	/**
+	 * Put an element
+	 */
+	const string CMD_PUT = string("PUT\r\n");
+
+	/**
+	 * The wait port of the application
+	 */
+	const int PORT = 2359;
+
 private:
 	/**
 	 * For display informations
 	 */
 	Log log;
-
-	/**
-	 * The wait port of the application
-	 */
-	int PORT = 2357;
 
 	/**
 	 * Wait socket
