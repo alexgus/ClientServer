@@ -3,17 +3,23 @@
  */
 
 #include <iostream>
+#include <signal.h>
 
 #include "Log.h"
 #include "Server.h"
 using namespace std;
+
+void sigInt(int sig);
+
+Server *serv = NULL;
 
 int main()
 {
 // Begin
 	// Declaration
 	int fd;
-	Server *serv;
+
+	signal(SIGINT, &sigInt);
 
 // Test Server
 	serv = new Server();
@@ -23,4 +29,10 @@ int main()
 
 // End
 	return 0;
+}
+
+void sigInt(int sig)
+{
+	if(serv != NULL)
+		delete serv;
 }

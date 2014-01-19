@@ -14,7 +14,7 @@ Server::Server()
 	fd_sock = socket(AF_INET, SOCK_STREAM, 0);
 
 	if(fd_sock == -1){
-		log.write("Socket creation error",Log::ERR); // TODO Add errno
+		log.write("Socket creation error : " + string(strerror(errno)),Log::ERR);
 		cerr<<"Socket creation error"<<endl;
 	}
 	addr.sin_family = AF_INET;
@@ -22,8 +22,7 @@ Server::Server()
 	addr.sin_port = htons(PORT);
 
 	if(bind(fd_sock,(struct sockaddr *) &addr, sizeof(addr)) == -1)
-		log.write("Binding error",Log::ERR); // TODO Add errno
-		cerr<<"Binding error"<<endl;
+		log.write("Binding error : " + string(strerror(errno)),Log::ERR);
 
 	listen(fd_sock, 5); // 5 = limit size of the connection queue
 }
@@ -32,7 +31,6 @@ Server::~Server()
 {
 	if(fd_sock != -1)
 		close(fd_sock);
-
 	// TODO unlink
 }
 
@@ -42,12 +40,17 @@ int Server::acceptConnection()
 	socklen_t tmp;
 	int fd;
 
+	// If no socket
+	if(fd_sock < 0)
+		return -1;
+
 	a.sa_family = AF_INET;
 	tmp = sizeof(a);
 	cout << "Wait accept" << endl;
 	fd = accept(fd_sock, &a, &tmp);
 	if(fd==-1)
 		perror("accept");
+
 	// TODO Add client to listClient
 	log << "Connection accepted from ****"; // TODO Finish log here
 
@@ -57,22 +60,19 @@ int Server::acceptConnection()
 void Server::debug(int fd)
 {
 	char buf[TAILLE_BUF];
-	int nbRead;
-	int i;
+	int nbRead = 0;
 
-	cout << "Debug" << endl;
+	// If fd isn't file descriptor
+	if(fd < 0)
+		return;
 
-	while(nbRead == 2) // 2 = '\n' + '\r'
+	while(nbRead != 2) // 2 = '\n' + '\r'
 	{
 		nbRead = read(fd,buf,TAILLE_BUF);
-		if (nbRead == 2) break;
-
+		buf[nbRead] = '\0';
 		cout << buf;
 
-		for(i=0;i<TAILLE_BUF;i++)
-			buf[i] = '\0'; // FIXME Beuurk
-
-		write(fd, "OK !\n\r", 6); // Acquitement
+		write(fd, "OK !\n\r", 6); // Ack
 	}
 
 	close(fd);

@@ -14,29 +14,41 @@
 #include <unistd.h>
 #include <string.h>
 #include <errno.h>
-
 #include <list>
-#include <thread>
 #include <string>
-
 #include "Log.h"
 
-
-#include <iostream>
 using namespace std;
 
-
 #define TAILLE_BUF 256
+
 
 class Server
 {
 private:
+	/**
+	 * For display informations
+	 */
 	Log log;
 
-	int PORT = 2348;
+	/**
+	 * The wait port of the application
+	 */
+	int PORT = 2357;
+
+	/**
+	 * Wait socket
+	 */
 	int fd_sock;
+
+	/**
+	 * Informations about the current address of this server
+	 */
 	struct sockaddr_in addr;
 
+	/**
+	 * List of connected clients
+	 */
 	list<sockaddr_in> listClient;
 
 public:
