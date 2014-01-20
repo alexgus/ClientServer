@@ -87,7 +87,11 @@ public:
 	 */
 	int acceptConnection();
 
-	void debug(int fd);
+	/**
+	 * Parse informations sent by the client
+	 * @param fd File descriptor for communication
+	 */
+	void run(int fd);
 };
 
 #endif /* SERVER_H_ */
