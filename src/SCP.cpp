@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <signal.h>
+#include <thread>
 
 #include "Log.h"
 #include "Server.h"
@@ -24,8 +25,17 @@ int main()
 // Test Server
 	serv = new Server();
 	fd = serv->acceptConnection();
-	serv->debug(fd);
-	serv->~Server();
+	try
+	{
+		thread f(&Server::run,serv,fd);
+		f.join();
+	}
+	catch(exception e)
+	{
+		e.what();
+	}
+
+	delete serv;
 
 // End
 	return 0;
