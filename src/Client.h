@@ -42,12 +42,13 @@ private :
 	struct addrinfo host_info;       // The struct that getaddrinfo() fills up with data.
 	struct addrinfo *host_info_list; // Pointer to the to the linked list of host_info's.
 	void init();
+	int connection();
 public :
 
 	Client();
 	Client(char* address, char* port);
    ~Client();
-   int connection();
+
    int initHostInfo(char *address, char* port);
    void run();
 };
