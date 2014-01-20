@@ -10,7 +10,7 @@
 Log::Log()
 {
 	// Opening in write-only and append to the next
-	this->file.open(FILENAME, std::ofstream::out | std::ofstream::app);
+	this->file.open(FILENAME.c_str(), std::ofstream::out | std::ofstream::app);
 
 	// If the file isn't open, display an error on cerr
 	if(!file.is_open())

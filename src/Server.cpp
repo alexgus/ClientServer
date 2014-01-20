@@ -6,11 +6,11 @@
  */
 
 #include "Server.h"
-
+//
 Server::Server()
 {
 	log << "Initializing server";
-
+	cout<< "SCP v1.0"<<endl;
 	// Create the socket
 	fd_sock = socket(AF_INET, SOCK_STREAM, 0);
 	if(fd_sock == -1)
