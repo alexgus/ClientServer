@@ -24,8 +24,8 @@ int main()
 // Test Server
 	serv = new Server();
 	fd = serv->acceptConnection();
-	serv->debug(fd);
-	serv->~Server();
+	serv->run(fd);
+	delete serv;
 
 // End
 	return 0;
