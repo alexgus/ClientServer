@@ -8,17 +8,17 @@
 #include "Client.h"
 
 Client::Client(){
-Init();
+init();
 }
 
 Client::Client(char* address, char* port){
-		Init();
-		InitHostInfo(address, port);
+		init();
+		initHostInfo(address, port);
 
 
 }
 
-int Client::InitHostInfo( char*address, char* port){
+int Client::initHostInfo( char*address, char* port){
 	status = getaddrinfo(address, port, &host_info, &host_info_list);
 		 if(status != 0){
 			log<<"Client : Failed to get Hosts Info";
@@ -29,7 +29,7 @@ int Client::InitHostInfo( char*address, char* port){
 		return status;
 }
 
-int Client::Connect(){
+int Client::connection(){
 	fd_sock = socket(host_info_list->ai_family,
 			host_info_list->ai_socktype,
 			host_info_list->ai_protocol);
@@ -41,8 +41,13 @@ int Client::Connect(){
 
 		 return status;
 }
-
-void Client::Init(){
+void Client::run(){
+	connection();
+	for(;;){
+sleep(1);
+	}
+}
+void Client::init(){
 		fd_sock = -1;
 		status = -1;
 		memset(&host_info, 0, sizeof host_info);
