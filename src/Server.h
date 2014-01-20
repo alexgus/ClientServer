@@ -15,6 +15,7 @@
 #include <string.h>
 #include <errno.h>
 #include <list>
+#include <thread>
 
 #include "Log.h"
 
@@ -68,6 +69,12 @@ private:
 	 */
 	list<sockaddr_in> listClient;
 
+	/**
+	 * Parse informations sent by the client
+	 * @param fd File descriptor for communication
+	 */
+	void run(int fd);
+
 public:
 	/**
 	 * Constructor of the class.
@@ -85,13 +92,7 @@ public:
 	 * Wait for a client.
 	 * @return The file descriptor for writing to the accepted client
 	 */
-	int acceptConnection();
-
-	/**
-	 * Parse informations sent by the client
-	 * @param fd File descriptor for communication
-	 */
-	void run(int fd);
+	void acceptConnection();
 };
 
 #endif /* SERVER_H_ */

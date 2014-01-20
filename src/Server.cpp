@@ -39,7 +39,7 @@ Server::~Server()
 		close(fd_sock);
 }
 
-int Server::acceptConnection()
+void Server::acceptConnection()
 {
 	sockaddr addrClient;
 	socklen_t lenAddrClient;
@@ -47,17 +47,20 @@ int Server::acceptConnection()
 
 	// If no socket
 	if(fd_sock < 0)
-		return -1;
+		return;
 
-	addrClient.sa_family = AF_INET;
-	lenAddrClient = sizeof(addrClient);
-	fd = accept(fd_sock, &addrClient, &lenAddrClient);
-	if(fd < 0)
-		log.write("Accept error : " + string(strerror(errno)),Log::ERR);
+	while(1)
+	{
+		addrClient.sa_family = AF_INET;
+		lenAddrClient = sizeof(addrClient);
+		fd = accept(fd_sock, &addrClient, &lenAddrClient);
+		if(fd < 0)
+			log.write("Accept error : " + string(strerror(errno)),Log::ERR);
 
-	log << "Connection accepted";
+		log << "Connection accepted";
 
-	return fd;
+		thread run(&Server::run,this,fd);
+	}
 }
 
 // TODO add process/thread
