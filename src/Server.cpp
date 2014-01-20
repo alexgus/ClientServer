@@ -10,7 +10,7 @@
 Server::Server()
 {
 	log << "Initializing server";
-	cout<< "SCP v1.0"<<endl;
+
 	// Create the socket
 	fd_sock = socket(AF_INET, SOCK_STREAM, 0);
 	if(fd_sock == -1)
@@ -49,6 +49,8 @@ int Server::acceptConnection()
 	if(fd_sock < 0)
 		return -1;
 
+	addrClient.sa_family = AF_INET;
+	lenAddrClient = sizeof(addrClient);
 	fd = accept(fd_sock, &addrClient, &lenAddrClient);
 	if(fd < 0)
 		log.write("Accept error : " + string(strerror(errno)),Log::ERR);
