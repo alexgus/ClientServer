@@ -15,13 +15,14 @@
 #include <string.h>
 #include <errno.h>
 #include <list>
-#include <string>
+
 #include "Log.h"
 
 using namespace std;
 
 #define TAILLE_BUF 256
 
+// TODO Add exception
 
 class Server
 {
@@ -37,9 +38,14 @@ public:
 	const string CMD_PUT = string("PUT\r\n");
 
 	/**
+	 * Put an element
+	 */
+	const string CMD_QUIT = string("\r\n");
+
+	/**
 	 * The wait port of the application
 	 */
-	const int PORT = 2359;
+	const int PORT = 2360;
 
 private:
 	/**
@@ -63,10 +69,24 @@ private:
 	list<sockaddr_in> listClient;
 
 public:
+	/**
+	 * Constructor of the class.
+	 * Initialize a socket
+	 */
 	Server();
+
+	/**
+	 * Destroyer of the class.
+	 * Delete the socket
+	 */
 	virtual ~Server();
 
+	/**
+	 * Wait for a client.
+	 * @return The file descriptor for writing to the accepted client
+	 */
 	int acceptConnection();
+
 	void debug(int fd);
 };
 
