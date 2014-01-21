@@ -13,30 +13,29 @@ using namespace std;
 void sigInt(int sig);
 
 Server *serv = NULL;
+thread *th_serv = NULL;
 
 int main()
 {
 // Begin
 	// Declaration
-	int fd;
-
 	signal(SIGINT, &sigInt);
 
 // Test Server
 	serv = new Server();
-	fd = serv->acceptConnection();
+
 	try
 	{
-		thread f(&Server::run,serv,fd);
-		f.join();
+		th_serv = new thread(&Server::acceptConnection,serv);
+		th_serv->join();
 	}
 	catch(exception e)
 	{
-		e.what();
+		cout << "inside main : " << e.what() << endl;
 	}
 
 	delete serv;
-
+	delete th_serv;
 // End
 	return 0;
 }
@@ -44,5 +43,7 @@ int main()
 void sigInt(int sig)
 {
 	if(serv != NULL)
+		delete serv;
+	if(th_serv != NULL)
 		delete serv;
 }
