@@ -43,6 +43,7 @@ void Server::acceptConnection()
 {
 	sockaddr addrClient;
 	socklen_t lenAddrClient;
+	thread run;
 	int fd;
 
 	// If no socket
@@ -59,8 +60,11 @@ void Server::acceptConnection()
 
 		log << "Connection accepted";
 
-		thread run(&Server::run,this,fd);
+
+		run = thread(&Server::run,this,fd);
+		//this->run(fd);
 	}
+	run.join();
 }
 
 // TODO add process/thread
@@ -68,12 +72,13 @@ void Server::run(int fd)
 {
 	char buf[TAILLE_BUF];
 	int nbRead = 0;
+	bool cont = true;
 
 	// If fd isn't file descriptor
 	if(fd < 0)
 		return;
 
-	while(1)
+	while(cont)
 	{
 		// Read command
 		nbRead = read(fd,buf,TAILLE_BUF);
@@ -91,7 +96,7 @@ void Server::run(int fd)
 		else if(string(buf) == CMD_QUIT)
 		{
 			write(fd, "Bye !\n\r", 6);
-			break;
+			cont = false;
 		}
 		else // Doesn't find any commands
 			write(fd, "OK ! What do you want ?\n\r", 25);
