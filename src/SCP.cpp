@@ -31,6 +31,7 @@ int main()
 	try
 	{
 		th_serv = new thread(&Server::acceptConnection,serv);
+		sleep(2);
 		th_client = new thread(&Client::run,client);
 		th_serv->join();
 		th_client ->join();
@@ -42,6 +43,7 @@ int main()
 
 	delete serv;
 	delete th_serv;
+	delete th_client;
 // End
 	return 0;
 }
@@ -52,4 +54,7 @@ void sigInt(int sig)
 		delete serv;
 	if(th_serv != NULL)
 		delete serv;
+	if(th_client != NULL)
+			delete client;
+
 }
