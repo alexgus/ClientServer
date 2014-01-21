@@ -44,7 +44,7 @@ void Server::acceptConnection()
 	sockaddr addrClient;
 	socklen_t lenAddrClient;
 	int fd;
-
+cout<<"server accepting connections"<<endl;
 	// If no socket
 	if(fd_sock < 0)
 		return;
