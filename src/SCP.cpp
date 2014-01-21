@@ -8,12 +8,15 @@
 
 #include "Log.h"
 #include "Server.h"
+#include "Client.h"
 using namespace std;
 
 void sigInt(int sig);
 
 Server *serv = NULL;
+Client *client = NULL;
 thread *th_serv = NULL;
+thread *th_client = NULL;
 
 int main()
 {
@@ -23,11 +26,14 @@ int main()
 
 // Test Server
 	serv = new Server();
+	client = new Client(HOST,PORT);
 
 	try
 	{
 		th_serv = new thread(&Server::acceptConnection,serv);
+		th_client = new thread(&Client::run,client);
 		th_serv->join();
+		th_client ->join();
 	}
 	catch(exception e)
 	{
