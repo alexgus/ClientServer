@@ -31,12 +31,12 @@ int main()
 	try
 	{
 		th_serv = new thread(&Server::acceptConnection,serv);
-		sleep(2);
+		sleep(5);
 		th_client = new thread(&Client::run,client);
 		th_serv->join();
 		th_client ->join();
 	}
-	catch(exception e)
+	catch(exception &e)
 	{
 		cout << "inside main : " << e.what() << endl;
 	}

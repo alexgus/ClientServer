@@ -11,15 +11,16 @@ Client::Client(){
 init();
 }
 
-Client::Client(char* address, char* port){
+Client::Client(string address, int port){
 		init();
 		initHostInfo(address, port);
 
 
 }
 
-int Client::initHostInfo( char*address, char* port){
-	status = getaddrinfo(address, port, &host_info, &host_info_list);
+int Client::initHostInfo(string address, int port){
+	char p = port+'0';
+	status = getaddrinfo(address.c_str() , &p, &host_info, &host_info_list);
 		 if(status != 0){
 			log<<"Client : Failed to get Hosts Info";
 			return status;

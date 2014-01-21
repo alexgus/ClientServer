@@ -26,7 +26,7 @@ using namespace std;
 
 
 //Target host details:
-#define PORT "2361"
+#define PORT  2361
 #define HOST "192.168.1.10"
 
 class Client {
@@ -46,10 +46,10 @@ private :
 public :
 
 	Client();
-	Client(char* address, char* port);
+	Client(string address, int port);
    virtual ~Client();
 
-   int initHostInfo(char *address, char* port);
+   int initHostInfo(string address, int port);
    void run();
 };
 
