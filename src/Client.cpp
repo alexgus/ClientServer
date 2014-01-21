@@ -54,3 +54,8 @@ void Client::init(){
 		host_info.ai_family = AF_UNSPEC;     // IP version not specified. Can be both.
 		host_info.ai_socktype = SOCK_STREAM; // Use SOCK_STREAM for TCP or SOCK_DGRAM for UDP.
 }
+
+Client::~Client()
+{
+
+}

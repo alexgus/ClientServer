@@ -47,7 +47,7 @@ public :
 
 	Client();
 	Client(char* address, char* port);
-   ~Client();
+   virtual ~Client();
 
    int initHostInfo(char *address, char* port);
    void run();
