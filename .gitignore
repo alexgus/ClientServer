@@ -3,3 +3,7 @@
 /.cproject
 /Raspberry
 /.project
+/DebugPC
+/DebugPi
+/ReleasePC
+/ReleasePi
