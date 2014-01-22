@@ -26,7 +26,7 @@ using namespace std;
 
 
 //Target host details:
-#define PORT  2361
+#define PORT  2370
 #define HOST "192.168.1.10"
 
 class Client {
@@ -43,6 +43,8 @@ private :
 	struct addrinfo *host_info_list; // Pointer to the to the linked list of host_info's.
 	void init();
 	int connection();
+	int sendCmd(string cmd);
+	string receive();
 public :
 
 	Client();
