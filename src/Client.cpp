@@ -45,7 +45,7 @@ int Client::connection(){
 		 status = connect(fd_sock, host_info_list->ai_addr, host_info_list->ai_addrlen);
 
 		 if (status == -1)
-			 log.write("Client : Connection Error : Failed to connect to Host",Log::ERR);
+			 log.write("Client : Failed to connect to Host",Log::ERR);
 
 		 return status;
 }
@@ -61,11 +61,18 @@ string msg, rcv;
 		cout<<"Client : waiting for an answer .."<<endl;
 		rcv = receive();
 		cout<<"Client [RCV] : "<<rcv<<endl;
+		if(rcv == "Bye !"){
+			cout<<"Client exiting -- Closing socket"<<endl;
+			close(fd_sock);
+			return;
+		}
+
 	}
 }
 
 int Client::sendCmd(string cmd){
 
+	log.write("Client [SEND] : "+cmd,Log::DBG);
 	if(send(fd_sock,cmd.c_str(),cmd.length(),0)==-1){
 			log.write("Client : Error when sending message",Log::ERR);
 			return -1;
@@ -82,7 +89,9 @@ string Client::receive(){
 			log.write("Client : Error when receiving message",Log::ERR);
 			return "";
 	}
+
 	buff[size]='\0';
+	log.write("Client [RECV] : "+(string)buff,Log::DBG);
 	return (string)buff;
 }
 void Client::init(){

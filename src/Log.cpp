@@ -39,13 +39,13 @@ void Log::write(string s, LEVEL l)
 	switch(l)
 	{
 		case DBG:
-			file << "[DEBUG] ";
+			file << "\t[DEBUG]\t";
 			break;
 		case WARN:
-			file << "[WARN] ";
+			file << "\t[WARN]\t";
 			break;
 		case ERR:
-			file << "[ERR] ";
+			file << "\t[ERR]\t";
 			break;
 	}
 
@@ -61,7 +61,7 @@ void Log::writeTime()
 	time(&timestamp);
 	local = localtime(&timestamp); // Convert to struct tm
 
-	file << "[" << local->tm_year + 1900 << "/" << local->tm_mon << "/" << local->tm_mday << " " << local->tm_hour << ":" << local->tm_min << ":" << local->tm_sec << "] ";
+	file << "[" << local->tm_year + 1900 << "/" << local->tm_mon+1 << "/" << local->tm_mday << " " << local->tm_hour << ":" << local->tm_min << ":" << local->tm_sec << "] ";
 }
 
 
