@@ -29,22 +29,22 @@ public:
 	/**
 	 * Get an element
 	 */
-	const string CMD_GET = string("GET\r\n");
+	const string CMD_GET = string("GET");
 
 	/**
 	 * Put an element
 	 */
-	const string CMD_PUT = string("PUT\r\n");
+	const string CMD_PUT = string("PUT");
 
 	/**
 	 * Put an element
 	 */
-	const string CMD_QUIT = string("\r\n");
+	const string CMD_QUIT = string("");
 
 	/**
 	 * The wait port of the application
 	 */
-	const int PORT = 2370;
+	const int PORT = 2371;
 
 private:
 	/**

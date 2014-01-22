@@ -63,7 +63,9 @@ void Server::acceptConnection()
 		if(fd < 0)
 			log.write("Accept error : " + string(strerror(errno)),Log::ERR);
 
-
+#ifdef DEBUG
+		log.write("Server accepted connection",Log::DBG);
+#endif
 		lClient.push_back(thread(&Server::run,this,fd));
 	}
 
@@ -86,26 +88,26 @@ void Server::run(int fd)
 	{
 		// Read command
 		nbRead = read(fd,buf,TAILLE_BUF);
-		buf[nbRead] = '\0'; // Add end of string
+		buf[nbRead-2] = '\0'; // Add end of string
 #ifdef DEBUG
 		log.write("Server : " + string(buf),Log::DBG);
 #endif
 		// Find the command
 		if(string(buf) == CMD_GET)
 		{
-			write(fd,(CMD_GET).c_str(),CMD_GET.size());
+			write(fd,CMD_GET.c_str(),CMD_GET.size());
 		}
 		else if(string(buf) == CMD_PUT)
 		{
-			write(fd,(CMD_PUT).c_str(),CMD_PUT.size());
+			write(fd,CMD_PUT.c_str(),CMD_PUT.size());
 		}
 		else if(string(buf) == CMD_QUIT)
 		{
-			write(fd, "Bye !\n\r", 6);
+			write(fd, "Bye !", 5);
 			cont = false;
 		}
 		else // Doesn't find any commands
-			write(fd, "OK ! What do you want ?\n\r", 25);
+			write(fd, "OK ! What do you want ?", 23);
 	}
 
 	// Close the file descriptor
