@@ -38,7 +38,7 @@ void Log::write(string s, LEVEL l)
 
 	switch(l)
 	{
-		case DEBUG:
+		case DBG:
 			file << "[DEBUG] ";
 			break;
 		case WARN:
