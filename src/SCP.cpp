@@ -31,7 +31,6 @@ int main()
 	try
 	{
 		th_serv = new thread(&Server::acceptConnection,serv);
-		sleep(5);
 		th_client = new thread(&Client::run,client);
 		th_serv->join();
 		th_client ->join();

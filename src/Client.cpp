@@ -57,7 +57,6 @@ string msg, rcv;
 	for(;;){
 		cout << "Client : type a command to send"<<endl;
 		cin >> msg;
-		cout<<"Message to be sent "<<msg<<" length "<<msg.length()<<endl;
 		sendCmd(msg);
 		cout<<"Client : waiting for an answer .."<<endl;
 		rcv = receive();
@@ -78,12 +77,12 @@ int Client::sendCmd(string cmd){
 string Client::receive(){
 
 	char buff[256];
-
-	if(recv(fd_sock,buff,256,0)==-1){
+	int size;
+	if((size=recv(fd_sock,buff,256,0))==-1){
 			log.write("Client : Error when receiving message",Log::ERR);
 			return "";
 	}
-
+	buff[size]='\0';
 	return (string)buff;
 }
 void Client::init(){
