@@ -39,7 +39,7 @@ public:
 	/**
 	 * Put an element
 	 */
-	const string CMD_QUIT = string("");
+	const string CMD_QUIT = string("QUIT");
 
 	/**
 	 * The wait port of the application
