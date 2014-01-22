@@ -88,7 +88,7 @@ void Server::run(int fd)
 	{
 		// Read command
 		nbRead = read(fd,buf,TAILLE_BUF);
-		buf[nbRead-2] = '\0'; // Add end of string
+		buf[nbRead] = '\0'; // Add end of string
 #ifdef DEBUG
 		log.write("Server : " + string(buf),Log::DBG);
 #endif
