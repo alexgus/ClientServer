@@ -90,24 +90,38 @@ void Server::run(int fd)
 		nbRead = read(fd,buf,TAILLE_BUF);
 		buf[nbRead] = '\0'; // Add end of string
 #ifdef DEBUG
-		log.write("Server : " + string(buf),Log::DBG);
+		log.write("Server [RECV] : " + string(buf),Log::DBG);
 #endif
 		// Find the command
 		if(string(buf) == CMD_GET)
 		{
 			write(fd,CMD_GET.c_str(),CMD_GET.size());
+#ifdef DEBUG
+		log.write("Server [SEND] : " + CMD_GET,Log::DBG);
+#endif
 		}
 		else if(string(buf) == CMD_PUT)
 		{
 			write(fd,CMD_PUT.c_str(),CMD_PUT.size());
+#ifdef DEBUG
+		log.write("Server [SEND] : " + CMD_PUT,Log::DBG);
+#endif
 		}
 		else if(string(buf) == CMD_QUIT)
 		{
 			write(fd, "Bye !", 5);
+#ifdef DEBUG
+		log.write("Server [SEND] : Bye",Log::DBG);
+#endif
 			cont = false;
 		}
 		else // Doesn't find any commands
+		{
 			write(fd, "OK ! What do you want ?", 23);
+#ifdef DEBUG
+		log.write("Server [SEND] : OK ! What do you want ?",Log::DBG);
+#endif
+		}
 	}
 
 	// Close the file descriptor
