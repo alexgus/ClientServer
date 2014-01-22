@@ -23,8 +23,6 @@ using namespace std;
 
 #define TAILLE_BUF 256
 
-// TODO Add exception
-
 class Server
 {
 public:

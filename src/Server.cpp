@@ -9,8 +9,9 @@
 //
 Server::Server()
 {
-	log << "Initializing server";
-
+#ifdef DEBUG
+		log.write("Initialize Server",Log::DBG);
+#endif
 	// Create the socket
 	fd_sock = socket(AF_INET, SOCK_STREAM, 0);
 	if(fd_sock == -1)
@@ -39,35 +40,38 @@ Server::~Server()
 		close(fd_sock);
 }
 
+
 void Server::acceptConnection()
 {
 	sockaddr addrClient;
 	socklen_t lenAddrClient;
-	thread run;
+	list<thread> lClient;
 	int fd;
-cout<<"server accepting connections"<<endl;
+
 	// If no socket
 	if(fd_sock < 0)
 		return;
 
 	while(1)
 	{
+#ifdef DEBUG
+		log.write("Server wait for connection",Log::DBG);
+#endif
 		addrClient.sa_family = AF_INET;
 		lenAddrClient = sizeof(addrClient);
 		fd = accept(fd_sock, &addrClient, &lenAddrClient);
 		if(fd < 0)
 			log.write("Accept error : " + string(strerror(errno)),Log::ERR);
 
-		log << "Connection accepted";
 
-
-		run = thread(&Server::run,this,fd);
-		//this->run(fd);
+		lClient.push_back(thread(&Server::run,this,fd));
 	}
-	run.join();
+
+	// Delete all run instance
+	for(list<thread>::iterator it=lClient.begin();it != lClient.end();++it)
+		it->join();
 }
 
-// TODO add process/thread
 void Server::run(int fd)
 {
 	char buf[TAILLE_BUF];
@@ -83,7 +87,9 @@ void Server::run(int fd)
 		// Read command
 		nbRead = read(fd,buf,TAILLE_BUF);
 		buf[nbRead] = '\0'; // Add end of string
-
+#ifdef DEBUG
+		log.write("Server : " + string(buf),Log::DBG);
+#endif
 		// Find the command
 		if(string(buf) == CMD_GET)
 		{
