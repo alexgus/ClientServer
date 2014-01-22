@@ -44,7 +44,7 @@ public:
 	/**
 	 * The wait port of the application
 	 */
-	const int PORT = 2371;
+	const int PORT = 2370;
 
 private:
 	/**
