@@ -39,13 +39,17 @@ int Client::connection(){
 			host_info_list->ai_socktype,
 			host_info_list->ai_protocol);
 
-		 if (fd_sock == -1)
+		 if (fd_sock == -1){
 			 log.write("Client : Failed creating the socket",Log::ERR);
+			 return -1;
+		 }
 
 		 status = connect(fd_sock, host_info_list->ai_addr, host_info_list->ai_addrlen);
 
-		 if (status == -1)
+		 if (status == -1){
 			 log.write("Client : Failed to connect to Host",Log::ERR);
+			 return -1;
+		 }
 
 		 return status;
 }

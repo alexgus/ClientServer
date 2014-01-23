@@ -17,11 +17,11 @@ Server::Server()
 	if(fd_sock == -1)
 		log.write("Socket creation error : " + string(strerror(errno)),Log::ERR);
 
-	/*int optVal = 0x1;
-	if(setsockopt(fd_sock,IPPROTO_TCP,SO_REUSEADDR,&optVal,sizeof(int)) == -1)
+	int optVal =1;
+	if(setsockopt(fd_sock,SOL_SOCKET,SO_REUSEADDR,&optVal,sizeof(int)) == -1)
 	{
 		log.write("Set SO_REUSEADDR error : " + string(strerror(errno)),Log::ERR);
-	}*/
+	}
 
 	// Bind the socket to the system
 	addr.sin_family = AF_INET;
