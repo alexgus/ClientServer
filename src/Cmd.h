@@ -21,7 +21,7 @@ public:
 	 * name cmd
 	 */
 	typedef enum{
-		PUT = 1, GET = 2, QUIT = 3
+		PUT = 1, GET = 2, QUIT = 3, ERR
 	} CMD;
 
 	/**

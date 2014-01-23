@@ -7,8 +7,7 @@
 
 #include "Cmd.h"
 
-Cmd::Cmd(CMD cmd)
-{
+Cmd::Cmd(CMD cmd) {
 	this->cmd = cmd;
 }
 
@@ -21,6 +20,42 @@ Cmd::Cmd(CMD cmd, list<string> &option, list<string> &arg) {
 Cmd::Cmd(string commande) {
 	this->cmd = CMD::GET;
 
+	string str;
+	auto it = commande.cbegin();
+	//
+	while ((*it != ' ') && (it != commande.cend())) {
+		str = str + *it;
+		it++;
+	}
+	if(str == "GET")
+		this->setCmd(Cmd::GET);
+	else if (str == "PUT")
+		this->setCmd(Cmd::PUT);
+	else if (str == "QUIT")
+		this->setCmd(Cmd::QUIT);
+	else
+		this->setCmd(Cmd::ERR);
+	str = "";
+
+	//search option and arg
+	while (it != commande.cend()){
+		if(*it!=' ')
+		{
+			str = "";
+			while ((*it != ' ') && (it != commande.cend())){
+				str = str + *it;
+				it++;
+			}
+			//add option whitout '-'
+			if(str[0] == '-')
+				this->addOption(str.assign(str.cbegin()+1, str.cend()));
+			//add arg
+			else
+				this->addArg(str);
+		}
+		else
+			it++;
+	}
 }
 
 /**
@@ -100,12 +135,12 @@ std::ostream& operator<<(ostream& os, const Cmd& cmd) {
 		os << "QUIT";
 		break;
 	default:
-		os << "INV CMD";
+		os << "ERR";
 		break;
 	}
 
 	list<string>::iterator it;
-	list<string> list = cmd.option;
+	list < string > list = cmd.option;
 
 	if (!cmd.option.empty()) {
 		for (it = list.begin(); it != list.end(); ++it)
