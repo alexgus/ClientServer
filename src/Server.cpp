@@ -68,12 +68,13 @@ void Server::acceptConnection()
 	{
 		// Set the fd_set
 		ret_select = 0;
+		timeoutAccept = { timeout , 0 };
 		FD_ZERO(&read);
 		FD_SET(fd_sock, &read);
 
-		if((ret_select = select(fd_sock+1,&read,NULL,NULL,&timeout)) < 0)
+		if((ret_select = select(fd_sock+1,&read,NULL,NULL,&timeoutAccept)) < 0)
 		{
-			log.write("Select error : " + string(strerror(errno)),Log::ERR);
+			log.write("Select accept error : " + string(strerror(errno)),Log::ERR);
 			return;
 		}
 
@@ -90,6 +91,7 @@ void Server::acceptConnection()
 		}
 	}
 
+	this->stopRun();
 	// Delete all run instance
 	for(list<thread>::iterator it=lClient.begin();it != lClient.end();++it)
 		it->join();
@@ -97,6 +99,9 @@ void Server::acceptConnection()
 
 void Server::run(int fd)
 {
+	int ret_select;
+	fd_set readSet;
+
 	char buf[TAILLE_BUF];
 	int nbRead = 0;
 
@@ -106,43 +111,57 @@ void Server::run(int fd)
 
 	while(this->contRun)
 	{
-		// Read command
-		nbRead = read(fd,buf,TAILLE_BUF);
-		buf[nbRead] = '\0'; // Add end of string
-#ifdef DEBUG
-		log.write("Server [RECV] : " + string(buf),Log::DBG);
-#endif
-		// Find the command
-		if(string(buf) == CMD_GET)
+		ret_select = 0;
+		timeoutRead = { timeout , 0 };
+		FD_ZERO(&readSet);
+		FD_SET(fd, &readSet);
+
+		if((ret_select = select(fd+1,&readSet,NULL,NULL,&timeoutRead)) < 0)
 		{
-			write(fd,CMD_GET.c_str(),CMD_GET.size());
-#ifdef DEBUG
-		log.write("Server [SEND] : " + CMD_GET,Log::DBG);
-#endif
+			log.write("Select read error : " + string(strerror(errno)),Log::ERR);
+			return;
 		}
-		else if(string(buf) == CMD_PUT)
+		// the state of fd changed
+		if(ret_select > 0)
 		{
-			write(fd,CMD_PUT.c_str(),CMD_PUT.size());
+			// Read command
+			nbRead = read(fd,buf,TAILLE_BUF);
+			buf[nbRead] = '\0'; // Add end of string
 #ifdef DEBUG
-		log.write("Server [SEND] : " + CMD_PUT,Log::DBG);
+			log.write("Server [RECV] : " + string(buf),Log::DBG);
 #endif
-		}
-		else if(string(buf) == CMD_QUIT)
-		{
-			write(fd, "Bye !", 5);
-			this->mt_contRun.lock();
-			this->contRun = false;
-			this->mt_contRun.unlock();
+			// Find the command
+			if(string(buf) == CMD_GET)
+			{
+				write(fd,CMD_GET.c_str(),CMD_GET.size());
 #ifdef DEBUG
-		log.write("Server [SEND] : Bye",Log::DBG);
+				log.write("Server [SEND] : " + CMD_GET,Log::DBG);
 #endif
-		}
-		else // Doesn't find any commands
-		{
-			write(fd, "OK ! What do you want ?", 23);
+			}
+			else if(string(buf) == CMD_PUT)
+			{
+				write(fd,CMD_PUT.c_str(),CMD_PUT.size());
 #ifdef DEBUG
-		log.write("Server [SEND] : OK ! What do you want ?",Log::DBG);
+				log.write("Server [SEND] : " + CMD_PUT,Log::DBG);
 #endif
+			}
+			else if(string(buf) == CMD_QUIT)
+			{
+				write(fd, "Bye !", 5);
+				this->mt_contRun.lock();
+				this->contRun = false;
+				this->mt_contRun.unlock();
+#ifdef DEBUG
+				log.write("Server [SEND] : Bye",Log::DBG);
+#endif
+			}
+			else // Doesn't find any commands
+			{
+				write(fd, "OK ! What do you want ?", 23);
+#ifdef DEBUG
+				log.write("Server [SEND] : OK ! What do you want ?",Log::DBG);
+#endif
+			}
 		}
 	}
 

@@ -50,9 +50,9 @@ public:
 	const int PORT = 2370;
 
 	/**
-	 * Timeout of accept on socket
+	 * Timeout of select (in seconds)
 	 */
-	timeval timeout = {2,0};
+	const int timeout = 2;
 
 private:
 	/**
@@ -79,6 +79,16 @@ private:
 	 * Continue to talk with a client
 	 */
 	bool contRun = true;
+
+	/**
+	 * Time out of the select on accept
+	 */
+	timeval timeoutAccept;
+
+	/**
+	 * Time out of the select on the read instruction
+	 */
+	timeval timeoutRead;
 
 	/**
 	 * Mutex for protecting waitAccept
