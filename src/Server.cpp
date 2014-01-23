@@ -20,7 +20,7 @@ Server::Server()
 	int optVal =1;
 	if(setsockopt(fd_sock,SOL_SOCKET,SO_REUSEADDR,&optVal,sizeof(int)) == -1)
 	{
-		log.write("Set SO_REUSEADDR error : " + string(strerror(errno)),Log::ERR);
+		log.write("Server : Failed to change socket option : " + string(strerror(errno)),Log::ERR);
 	}
 
 	// Bind the socket to the system
