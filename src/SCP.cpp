@@ -42,6 +42,7 @@ int main()
 
 	delete serv;
 	delete th_serv;
+	delete client;
 	delete th_client;
 // End
 	return 0;
@@ -54,6 +55,6 @@ void sigInt(int sig)
 	if(th_serv != NULL)
 		delete serv;
 	if(th_client != NULL)
-			delete client;
+		delete client;
 
 }
