@@ -10,12 +10,15 @@
 
 #include <sys/socket.h>
 #include <sys/types.h>
+#include <sys/select.h>
 #include <netinet/in.h>
 #include <unistd.h>
+#include <time.h>
 #include <string.h>
 #include <errno.h>
 #include <list>
 #include <thread>
+#include <mutex>
 
 #include "Log.h"
 
@@ -46,6 +49,11 @@ public:
 	 */
 	const int PORT = 2370;
 
+	/**
+	 * Timeout of accept on socket
+	 */
+	timeval timeout = {2,0};
+
 private:
 	/**
 	 * For display informations
@@ -63,15 +71,35 @@ private:
 	struct sockaddr_in addr;
 
 	/**
-	 * List of connected clients
+	 * While this value is true, the server will wait for new connection
 	 */
-	list<sockaddr_in> listClient;
+	bool waitAccept = true;
+
+	/**
+	 * Continue to talk with a client
+	 */
+	bool contRun = true;
+
+	/**
+	 * Mutex for protecting waitAccept
+	 */
+	mutex mt_waitAccept;
+
+	/**
+	 * Mutex for protecting contRun
+	 */
+	mutex mt_contRun;
 
 	/**
 	 * Parse informations sent by the client
 	 * @param fd File descriptor for communication
 	 */
 	void run(int fd);
+
+	/**
+	 * Stop the communication with the client
+	 */
+	void stopRun();
 
 public:
 	/**
@@ -91,6 +119,11 @@ public:
 	 * @return The file descriptor for writing to the accepted client
 	 */
 	void acceptConnection();
+
+	/**
+	 * Stop the thread server. Stop Connection waiting.
+	 */
+	void stopServer();
 };
 
 #endif /* SERVER_H_ */

@@ -43,30 +43,51 @@ Server::~Server()
 
 void Server::acceptConnection()
 {
+// Declaration
+	int fd;
+	int ret_select;
+	fd_set read;
+
 	sockaddr addrClient;
 	socklen_t lenAddrClient;
 	list<thread> lClient;
-	int fd;
 
+	addrClient.sa_family = AF_INET;
+	lenAddrClient = sizeof(addrClient);
+
+// Begin
 	// If no socket
 	if(fd_sock < 0)
 		return;
 
-	while(1)
-	{
 #ifdef DEBUG
 		log.write("Server wait for connection",Log::DBG);
 #endif
-		addrClient.sa_family = AF_INET;
-		lenAddrClient = sizeof(addrClient);
-		fd = accept(fd_sock, &addrClient, &lenAddrClient);
-		if(fd < 0)
-			log.write("Accept error : " + string(strerror(errno)),Log::ERR);
+
+	while(this->waitAccept)
+	{
+		// Set the fd_set
+		ret_select = 0;
+		FD_ZERO(&read);
+		FD_SET(fd_sock, &read);
+
+		if((ret_select = select(fd_sock+1,&read,NULL,NULL,&timeout)) < 0)
+		{
+			log.write("Select error : " + string(strerror(errno)),Log::ERR);
+			return;
+		}
+
+		if(ret_select > 0)
+		{
+			fd = accept(fd_sock, &addrClient, &lenAddrClient);
+			if(fd < 0)
+				log.write("Accept error : " + string(strerror(errno)),Log::ERR);
 
 #ifdef DEBUG
-		log.write("Server accepted connection",Log::DBG);
+			log.write("Server accepted connection",Log::DBG);
 #endif
-		lClient.push_back(thread(&Server::run,this,fd));
+			lClient.push_back(thread(&Server::run,this,fd));
+		}
 	}
 
 	// Delete all run instance
@@ -78,13 +99,12 @@ void Server::run(int fd)
 {
 	char buf[TAILLE_BUF];
 	int nbRead = 0;
-	bool cont = true;
 
 	// If fd isn't file descriptor
 	if(fd < 0)
 		return;
 
-	while(cont)
+	while(this->contRun)
 	{
 		// Read command
 		nbRead = read(fd,buf,TAILLE_BUF);
@@ -110,10 +130,12 @@ void Server::run(int fd)
 		else if(string(buf) == CMD_QUIT)
 		{
 			write(fd, "Bye !", 5);
+			this->mt_contRun.lock();
+			this->contRun = false;
+			this->mt_contRun.unlock();
 #ifdef DEBUG
 		log.write("Server [SEND] : Bye",Log::DBG);
 #endif
-			cont = false;
 		}
 		else // Doesn't find any commands
 		{
@@ -128,3 +150,16 @@ void Server::run(int fd)
 	close(fd);
 }
 
+void Server::stopServer()
+{
+	this->mt_waitAccept.lock();
+	this->waitAccept = false;
+	this->mt_waitAccept.unlock();
+}
+
+void Server::stopRun()
+{
+	this->mt_contRun.lock();
+	this->contRun = false;
+	this->mt_contRun.unlock();
+}
