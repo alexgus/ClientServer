@@ -21,6 +21,7 @@
 #include <mutex>
 
 #include "Log.h"
+#include "Com.h"
 #include "ServerCmdHandler.h"
 
 using namespace std;

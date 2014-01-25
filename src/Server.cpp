@@ -100,39 +100,20 @@ void Server::acceptConnection()
 
 void Server::run(int fd)
 {
-	int ret_select;
-	fd_set readSet;
-	timeval timeoutRead;
-
-	char buf[TAILLE_BUF];
-	int nbRead = 0;
-
 	// If fd isn't file descriptor
 	if(fd < 0)
 		return;
 
+	Com *c = new Com(fd,{2,0});
+	string *str;
+
 	while(this->contRun)
 	{
-		ret_select = 0;
-		timeoutRead = { timeout , 0 };
-		FD_ZERO(&readSet);
-		FD_SET(fd, &readSet);
-
-		if((ret_select = select(fd+1,&readSet,NULL,NULL,&timeoutRead)) < 0)
+		if((str = &(c->readString())) != NULL)
 		{
-			log.write("Select read error : " + string(strerror(errno)),Log::ERR);
-			return;
-		}
-		// the state of fd changed
-		if(ret_select > 0)
-		{
-			// Read command
-			nbRead = read(fd,buf,TAILLE_BUF);
-			buf[nbRead] = '\0'; // Add end of string
-
-			string *str = new string(buf);
 			ServerCmdHandler *cmdHandler = new ServerCmdHandler(*str);
 			cmdHandler->exec();
+			c->writeString("OK : " + *str);
 		}
 	}
 
