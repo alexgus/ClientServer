@@ -9,7 +9,7 @@
 
 Cmd::Cmd()
 {
-
+	this->cmd = CMD::ERR;
 }
 
 Cmd::Cmd(CMD cmd) {
