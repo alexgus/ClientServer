@@ -12,6 +12,7 @@
 using namespace std;
 
 void sigInt(int sig);
+void cleanAndStop();
 
 Server *serv = NULL;
 Client *client = NULL;
@@ -31,13 +32,46 @@ int main()
 	try
 	{
 		th_serv = new thread(&Server::acceptConnection,serv);
+	}
+	catch(system_error &e)
+	{
+		cout << "Server thread" << endl;
+		cout << "What : " << e.what() << endl;
+		cout << "Code : " << e.code() << endl;
+		cleanAndStop();
+	}
+	try
+	{
 		th_client = new thread(&Client::run,client);
-		th_serv->join();
+	}
+	catch(system_error &e)
+	{
+		cout << "Client thread" << endl;
+		cout << "What : " << e.what() << endl;
+		cout << "Code : " << e.code() << endl;
+		cleanAndStop();
+	}
+	try
+	{
 		th_client ->join();
 	}
-	catch(exception &e)
+	catch(system_error &e)
 	{
-		cout << "inside main : " << e.what() << endl;
+		cout << "Client join" << endl;
+		cout << "What : " << e.what() << endl;
+		cout << "Code : " << e.code() << endl;
+		cleanAndStop();
+	}
+	try
+	{
+		th_serv->join();
+	}
+	catch(system_error &e)
+	{
+		cout << "Server join" << endl;
+		cout << "What : " << e.what() << endl;
+		cout << "Code : " << e.code() << endl;
+		cleanAndStop();
 	}
 
 	delete serv;
@@ -50,11 +84,30 @@ int main()
 
 void sigInt(int sig)
 {
+	cleanAndStop();
+}
+
+void cleanAndStop()
+{
 	if(serv != NULL)
+	{
+		serv->stopServer();
+		if(th_serv != NULL)
+		{
+			try
+			{
+				th_serv->join();
+			}
+			catch(system_error &e)
+			{
+				cout << "In sigHandler" << endl;
+				cout << "What : " << e.what() << endl;
+				cout << "Code : " << e.code() << endl;
+			}
+		}
+		delete th_serv;
 		delete serv;
-	if(th_serv != NULL)
-		delete serv;
+	}
 	if(th_client != NULL)
 		delete client;
-
 }
