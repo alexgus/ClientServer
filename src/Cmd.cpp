@@ -7,6 +7,11 @@
 
 #include "Cmd.h"
 
+Cmd::Cmd()
+{
+
+}
+
 Cmd::Cmd(CMD cmd) {
 	this->cmd = cmd;
 }

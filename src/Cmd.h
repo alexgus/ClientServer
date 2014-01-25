@@ -28,6 +28,8 @@ public:
 	 * Class' constructor
 	 */
 
+	Cmd();
+
 	Cmd(CMD cmd);
 
 	Cmd(CMD cmd, list<string> &option, list<string> &arg);
