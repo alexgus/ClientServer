@@ -21,31 +21,20 @@
 #include <mutex>
 
 #include "Log.h"
+#include "ServerCmdHandler.h"
 
 using namespace std;
 
 #define TAILLE_BUF 256
 
+/**
+ * Class
+ */
 class Server
 {
 public:
 	/**
-	 * Get an element
-	 */
-	const string CMD_GET = string("GET");
-
-	/**
-	 * Put an element
-	 */
-	const string CMD_PUT = string("PUT");
-
-	/**
-	 * Put an element
-	 */
-	const string CMD_QUIT = string("QUIT");
-
-	/**
-	 * The wait port of the application
+	 * The waiting port of the application
 	 */
 	const int PORT = 2370;
 
@@ -79,16 +68,6 @@ private:
 	 * Continue to talk with a client
 	 */
 	bool contRun = true;
-
-	/**
-	 * Time out of the select on accept
-	 */
-	timeval timeoutAccept;
-
-	/**
-	 * Time out of the select on the read instruction
-	 */
-	timeval timeoutRead;
 
 	/**
 	 * Mutex for protecting waitAccept

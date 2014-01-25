@@ -6,7 +6,7 @@
  */
 
 #include "Server.h"
-//
+
 Server::Server()
 {
 #ifdef DEBUG
@@ -47,6 +47,7 @@ void Server::acceptConnection()
 	int fd;
 	int ret_select;
 	fd_set read;
+	timeval timeoutAccept;
 
 	sockaddr addrClient;
 	socklen_t lenAddrClient;
@@ -101,6 +102,7 @@ void Server::run(int fd)
 {
 	int ret_select;
 	fd_set readSet;
+	timeval timeoutRead;
 
 	char buf[TAILLE_BUF];
 	int nbRead = 0;
@@ -127,41 +129,10 @@ void Server::run(int fd)
 			// Read command
 			nbRead = read(fd,buf,TAILLE_BUF);
 			buf[nbRead] = '\0'; // Add end of string
-#ifdef DEBUG
-			log.write("Server [RECV] : " + string(buf),Log::DBG);
-#endif
-			// Find the command
-			if(string(buf) == CMD_GET)
-			{
-				write(fd,CMD_GET.c_str(),CMD_GET.size());
-#ifdef DEBUG
-				log.write("Server [SEND] : " + CMD_GET,Log::DBG);
-#endif
-			}
-			else if(string(buf) == CMD_PUT)
-			{
-				write(fd,CMD_PUT.c_str(),CMD_PUT.size());
-#ifdef DEBUG
-				log.write("Server [SEND] : " + CMD_PUT,Log::DBG);
-#endif
-			}
-			else if(string(buf) == CMD_QUIT)
-			{
-				write(fd, "Bye !", 5);
-				this->mt_contRun.lock();
-				this->contRun = false;
-				this->mt_contRun.unlock();
-#ifdef DEBUG
-				log.write("Server [SEND] : Bye",Log::DBG);
-#endif
-			}
-			else // Doesn't find any commands
-			{
-				write(fd, "OK ! What do you want ?", 23);
-#ifdef DEBUG
-				log.write("Server [SEND] : OK ! What do you want ?",Log::DBG);
-#endif
-			}
+
+			string *str = new string(buf);
+			ServerCmdHandler *cmdHandler = new ServerCmdHandler(*str);
+			cmdHandler->exec();
 		}
 	}
 
