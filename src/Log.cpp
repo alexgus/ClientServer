@@ -32,15 +32,17 @@ Log& Log::operator<<(string s)
 	return *this;
 }
 
-void Log::write(string s, LEVEL l)
+void Log::write(string s, LEVEL l, string callClass)
 {
 	writeTime();
 
 	switch(l)
 	{
+#ifdef DEBUG
 		case DBG:
 			file << "\t[DEBUG]\t";
 			break;
+#endif
 		case WARN:
 			file << "\t[WARN]\t";
 			break;
@@ -49,7 +51,12 @@ void Log::write(string s, LEVEL l)
 			break;
 	}
 
-	file << s << endl;
+	file << "[" + callClass + "]" << s << endl;
+}
+
+void Log::write(string s, LEVEL l)
+{
+	this->write(s,l,string("NULL"));
 }
 
 void Log::writeTime()

@@ -55,6 +55,14 @@ public:
 	 * Write the string to the log with the level l
 	 * @param s The string to log
 	 * @param l The log level
+	 * @param callClass The name of the class who called the function
+	 */
+	void write(string s, LEVEL l, string callClass);
+
+	/**
+	 * Write the string to the log with the level l
+	 * @param s The string to log
+	 * @param l The log level
 	 */
 	void write(string s, LEVEL l);
 
