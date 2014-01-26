@@ -9,23 +9,23 @@
 
 Server::Server()
 {
-	log.write("Initialize Server",Log::DBG);
+	log.write("Initialize Server",Log::DBG,typeid(this).name());
 
 	// Create the socket
 	fd_sock = socket(AF_INET, SOCK_STREAM, 0);
 	if(fd_sock == -1)
-		log.write("Socket creation error : " + string(strerror(errno)),Log::ERR);
+		log.write("Socket creation error : " + string(strerror(errno)),Log::ERR,typeid(this).name());
 
 	int optVal =1;
 	if(setsockopt(fd_sock,SOL_SOCKET,SO_REUSEADDR,&optVal,sizeof(int)) == -1)
-		log.write("Server : Failed to change socket option : " + string(strerror(errno)),Log::ERR);
+		log.write("Server : Failed to change socket option : " + string(strerror(errno)),Log::ERR,typeid(this).name());
 
 	// Bind the socket to the system
 	addr.sin_family = AF_INET;
 	addr.sin_addr.s_addr = htonl(INADDR_ANY); // Conversion big indian
 	addr.sin_port = htons(PORT);
 	if(bind(fd_sock,(struct sockaddr *) &addr, sizeof(addr)) == -1)
-		log.write("Binding error : " + string(strerror(errno)),Log::ERR);
+		log.write("Binding error : " + string(strerror(errno)),Log::ERR,typeid(this).name());
 
 	// Set the listen queue
 	listen(fd_sock, 5); // 5 = limit size of the connection queue
@@ -70,7 +70,7 @@ void Server::acceptConnection()
 
 		if((ret_select = select(fd_sock+1,&read,NULL,NULL,&timeoutAccept)) < 0)
 		{
-			log.write("Select accept error : " + string(strerror(errno)),Log::ERR);
+			log.write("Select accept error : " + string(strerror(errno)),Log::ERR,typeid(this).name());
 			return;
 		}
 
@@ -78,9 +78,9 @@ void Server::acceptConnection()
 		{
 			fd = accept(fd_sock, &addrClient, &lenAddrClient);
 			if(fd < 0)
-				log.write("Accept error : " + string(strerror(errno)),Log::ERR);
+				log.write("Accept error : " + string(strerror(errno)),Log::ERR,typeid(this).name());
 
-			log.write("Server accepted connection",Log::DBG);
+			log.write("Server accepted connection",Log::DBG,typeid(this).name());
 
 			lClient.push_back(thread(&Server::run,this,fd));
 		}

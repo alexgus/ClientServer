@@ -18,6 +18,7 @@
 #include <string.h>
 
 #include <cerrno>
+#include <typeinfo>
 #include <string>
 #include <list>
 #include <thread>
