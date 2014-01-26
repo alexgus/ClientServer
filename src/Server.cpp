@@ -9,9 +9,8 @@
 
 Server::Server()
 {
-#ifdef DEBUG
-		log.write("Initialize Server",Log::DBG);
-#endif
+	log.write("Initialize Server",Log::DBG);
+
 	// Create the socket
 	fd_sock = socket(AF_INET, SOCK_STREAM, 0);
 	if(fd_sock == -1)
@@ -19,9 +18,7 @@ Server::Server()
 
 	int optVal =1;
 	if(setsockopt(fd_sock,SOL_SOCKET,SO_REUSEADDR,&optVal,sizeof(int)) == -1)
-	{
 		log.write("Server : Failed to change socket option : " + string(strerror(errno)),Log::ERR);
-	}
 
 	// Bind the socket to the system
 	addr.sin_family = AF_INET;
@@ -61,15 +58,13 @@ void Server::acceptConnection()
 	if(fd_sock < 0)
 		return;
 
-#ifdef DEBUG
-		log.write("Server wait for connection",Log::DBG);
-#endif
+	log.write("Server wait for connection",Log::DBG);
 
 	while(this->waitAccept)
 	{
 		// Set the fd_set
 		ret_select = 0;
-		timeoutAccept = { timeout , 0 };
+		timeoutAccept = { timeoutS , timeoutM };
 		FD_ZERO(&read);
 		FD_SET(fd_sock, &read);
 
@@ -85,9 +80,8 @@ void Server::acceptConnection()
 			if(fd < 0)
 				log.write("Accept error : " + string(strerror(errno)),Log::ERR);
 
-#ifdef DEBUG
 			log.write("Server accepted connection",Log::DBG);
-#endif
+
 			lClient.push_back(thread(&Server::run,this,fd));
 		}
 	}
@@ -104,7 +98,7 @@ void Server::run(int fd)
 	if(fd < 0)
 		return;
 
-	Com *c = new Com(fd,{2,0});
+	Com *c = new Com(fd,{timeoutS,timeoutM});
 	string *str;
 
 	while(this->contRun)

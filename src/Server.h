@@ -11,11 +11,14 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <sys/select.h>
+
 #include <netinet/in.h>
 #include <unistd.h>
 #include <time.h>
 #include <string.h>
-#include <errno.h>
+
+#include <cerrno>
+#include <string>
 #include <list>
 #include <thread>
 #include <mutex>
@@ -26,10 +29,8 @@
 
 using namespace std;
 
-#define TAILLE_BUF 256
-
 /**
- * Class
+ * Class Server
  */
 class Server
 {
@@ -37,12 +38,17 @@ public:
 	/**
 	 * The waiting port of the application
 	 */
-	const int PORT = 2370;
+	const static int PORT = 2370;
 
 	/**
 	 * Timeout of select (in seconds)
 	 */
-	const int timeout = 2;
+	const static int timeoutS = 2;
+
+	/**
+	 * Timeout of select (in milliseconds)
+	 */
+	const static int timeoutM = 0;
 
 private:
 	/**
