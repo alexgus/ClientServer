@@ -32,7 +32,7 @@ ServerCmdHandler& ServerCmdHandler::operator=(ServerCmdHandler &s)
 	return s;
 }
 
-void ServerCmdHandler::exec()
+void ServerCmdHandler::exec(int port)
 {
 	if(this->cmd != NULL)
 	{
@@ -40,9 +40,13 @@ void ServerCmdHandler::exec()
 		list<string> opt = this->cmd->getOption();
 		list<string>::iterator it;
 
+		SendFile *send;
+
 		switch(this->cmd->getCmd())
 		{
 			case Cmd::GET:
+				send = new SendFile(arg.front(),port);
+				send->send();
 				break;
 			case Cmd::PUT:
 				break;

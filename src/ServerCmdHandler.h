@@ -10,8 +10,10 @@
 
 #include <iostream>
 #include <string>
+
 #include "Log.h"
 #include "Cmd.h"
+#include "SendFile.h"
 
 using namespace std;
 
@@ -46,7 +48,7 @@ public:
 	/**
 	 * Execute the command
 	 */
-	void exec();
+	void exec(int port);
 
 	/**
 	 * Override operator =

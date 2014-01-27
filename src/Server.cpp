@@ -106,7 +106,7 @@ void Server::run(int fd)
 		if((str = &(c->readString())) != NULL)
 		{
 			ServerCmdHandler *cmdHandler = new ServerCmdHandler(*str);
-			cmdHandler->exec();
+			cmdHandler->exec(fd);
 			c->writeString("OK : " + *str);
 		}
 	}
