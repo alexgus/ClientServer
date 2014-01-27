@@ -14,7 +14,9 @@ SendFile::SendFile()
 
 SendFile::SendFile(string path, int clientPort)
 {
-	log.write("Sending file",Log::DBG,"SendFile");
+	char num[6];
+	sprintf(num,"%d",clientPort);
+	log.write("Sending file " + path + " to " + num,Log::DBG,"SendFile");
 
 	this->com = new Com(clientPort,{2,0});
 	this->file.open(path,ifstream::in);
@@ -34,11 +36,12 @@ void SendFile::send()
 	len = this->file.tellg();
 	this->file.seekg(0,this->file.beg);
 
-	buf = new char[len];
+	buf = (char*)malloc(len);
 
 	while(!this->file.eof())
 	{
 		this->file.read(buf,len);
+		log << buf;
 		this->com->writeString(buf);
 	}
 }
