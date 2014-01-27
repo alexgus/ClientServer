@@ -39,6 +39,11 @@ public:
 	 */
 	virtual ~SendFile();
 
+	/**
+	 * Function for sending the file
+	 */
+	void send();
+
 private:
 	/**
 	 * Log file
@@ -54,11 +59,6 @@ private:
 	 * File to send
 	 */
 	ifstream file;
-
-	/**
-	 * Function for sending the file
-	 */
-	void send();
 };
 
 #endif /* SENDFILE_H_ */

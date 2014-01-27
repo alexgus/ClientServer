@@ -18,8 +18,6 @@ SendFile::SendFile(string path, int clientPort)
 
 	this->com = new Com(clientPort,{2,0});
 	this->file.open(path,ifstream::in);
-
-	this->send();
 }
 
 SendFile::~SendFile()
