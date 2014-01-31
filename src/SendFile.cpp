@@ -25,6 +25,8 @@ SendFile::SendFile(string path, int clientPort)
 SendFile::~SendFile()
 {
 	delete this->com;
+	delete this->file;
+	delete this->log;
 }
 
 void SendFile::send()
