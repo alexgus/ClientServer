@@ -16,6 +16,8 @@
 
 using namespace std;
 
+#define MAX_MTU 1024
+
 /**
  * Class for sending a file to a client
  */
