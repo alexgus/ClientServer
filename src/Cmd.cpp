@@ -22,6 +22,7 @@ Cmd::Cmd(CMD cmd, list<string> &option, list<string> &arg) {
 	this->arg = arg;
 }
 
+// FIXME Delete \r\n at the end of the string
 Cmd::Cmd(string commande) {
 	this->cmd = CMD::GET;
 
