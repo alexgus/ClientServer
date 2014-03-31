@@ -23,7 +23,7 @@ int main()
 {
 // Begin
 	// Declaration
-	signal(SIGINT, &sigInt);
+
 
 // Test Server
 	serv = new Server();
@@ -54,6 +54,7 @@ int main()
 	try
 	{
 		th_client ->join();
+
 	}
 	catch(system_error &e)
 	{
@@ -65,6 +66,7 @@ int main()
 	try
 	{
 		th_serv->join();
+
 	}
 	catch(system_error &e)
 	{
@@ -82,10 +84,7 @@ int main()
 	return 0;
 }
 
-void sigInt(int sig)
-{
-	cleanAndStop();
-}
+
 
 void cleanAndStop()
 {
@@ -93,19 +92,8 @@ void cleanAndStop()
 	{
 		serv->stopServer();
 		if(th_serv != NULL)
-		{
-			try
-			{
-				th_serv->join();
-			}
-			catch(system_error &e)
-			{
-				cout << "In sigHandler" << endl;
-				cout << "What : " << e.what() << endl;
-				cout << "Code : " << e.code() << endl;
-			}
-		}
-		delete th_serv;
+			delete th_serv;
+
 		delete serv;
 	}
 	if(th_client != NULL)

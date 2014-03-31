@@ -27,7 +27,7 @@ using namespace std;
 
 //Target host details:
 #define PORT  2370
-#define HOST "192.168.1.10"
+#define HOST "192.168.1.30"
 
 class Client {
 
