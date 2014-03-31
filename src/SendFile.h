@@ -10,6 +10,7 @@
 
 #include <string>
 #include <fstream>
+#include <typeinfo>
 
 #include "Log.h"
 #include "Com.h"
@@ -55,7 +56,7 @@ private:
 	/**
 	 * Communication methods
 	 */
-	Com *com;
+	Com *com = NULL;
 
 	/**
 	 * File to send

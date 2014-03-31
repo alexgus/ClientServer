@@ -51,12 +51,12 @@ void Log::write(string s, LEVEL l, string callClass)
 			break;
 	}
 
-	file << "[" + callClass + "]" << s << endl;
+	file << "[" + callClass + "]\t" << s << endl;
 }
 
 void Log::write(string s, LEVEL l)
 {
-	this->write(s,l,string("NULL"));
+	this->write(s,l,string("NULL--"));
 }
 
 void Log::writeTime()
