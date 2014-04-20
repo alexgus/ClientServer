@@ -114,9 +114,10 @@ void Server::run(int fd)
 			// If quit
 			if(cmdHandler->exec(fd) == 0)
 			{
-				this->mt_contRun.lock();
-				this->contRun = 0;
-				this->mt_contRun.unlock();
+				this->stopRun();
+				c->writeString("Bye !");
+				log.write("Server finished",Log::DBG,typeid(this).name());
+				return;
 			}
 			c->writeString("OK : " + *str);
 		}
