@@ -11,9 +11,9 @@
 #include "Client.h"
 using namespace std;
 
-void sigInt(int sig);
 void cleanAndStop();
 
+Log log;
 Server *serv = NULL;
 Client *client = NULL;
 thread *th_serv = NULL;
@@ -21,70 +21,48 @@ thread *th_client = NULL;
 
 int main()
 {
-// Begin
-	// Declaration
-
-
-// Test Server
+// Declaration/Initialization
 	serv = new Server();
 	client = new Client(HOST,PORT);
 
+// Run
+	// Launch Server
 	try
 	{
 		th_serv = new thread(&Server::acceptConnection,serv);
-	}
-	catch(system_error &e)
-	{
-		cout << "Server thread" << endl;
-		cout << "What : " << e.what() << endl;
-		cout << "Code : " << e.code() << endl;
-		cleanAndStop();
-	}
-	try
-	{
 		th_client = new thread(&Client::run,client);
 	}
 	catch(system_error &e)
 	{
-		cout << "Client thread" << endl;
-		cout << "What : " << e.what() << endl;
-		cout << "Code : " << e.code() << endl;
+		log << "Launch Server/Client thread";
+		log << "What : " << e.what();
 		cleanAndStop();
 	}
+	// Wait for server/client end
 	try
 	{
 		th_client ->join();
-
-	}
-	catch(system_error &e)
-	{
-		cout << "Client join" << endl;
-		cout << "What : " << e.what() << endl;
-		cout << "Code : " << e.code() << endl;
-		cleanAndStop();
-	}
-	try
-	{
+		log << "Client terminated";
+		serv->stopServer();
 		th_serv->join();
-
+		log << "Serv terminated";
 	}
 	catch(system_error &e)
 	{
-		cout << "Server join" << endl;
-		cout << "What : " << e.what() << endl;
-		cout << "Code : " << e.code() << endl;
+		log << "Join Server/Client";
+		log << "What : " << e.what();
 		cleanAndStop();
 	}
 
+// Clean
 	delete serv;
 	delete th_serv;
 	delete client;
 	delete th_client;
+
 // End
 	return 0;
 }
-
-
 
 void cleanAndStop()
 {
