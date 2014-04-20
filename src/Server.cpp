@@ -60,8 +60,11 @@ void Server::acceptConnection()
 
 	log.write("Server wait for connection",Log::DBG);
 
+	this->mt_waitAccept.lock();
 	while(this->waitAccept)
 	{
+		this->mt_waitAccept.unlock();
+
 		// Set the fd_set
 		ret_select = 0;
 		timeoutAccept = { timeoutS , timeoutM };
@@ -101,8 +104,10 @@ void Server::run(int fd)
 	Com *c = new Com(fd,{timeoutS,timeoutM});
 	string *str;
 
+	this->mt_contRun.lock();
 	while(this->contRun)
 	{
+		this->mt_contRun.unlock();
 		if((str = &(c->readString())) != NULL)
 		{
 			ServerCmdHandler *cmdHandler = new ServerCmdHandler(*str);
