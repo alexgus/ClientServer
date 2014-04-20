@@ -46,12 +46,14 @@ void Server::acceptConnection()
 	fd_set read;
 	timeval timeoutAccept;
 
-	sockaddr addrClient;
-	socklen_t lenAddrClient;
+	/*
+	 * addrClient.sa_data[0] + addrClient.sa_data[1] = PORT client
+	 * addrClient.sa_data[5].addrClient.sa_data[4].addrClient.sa_data[3].addrClient.sa_data[2] = IP Client
+	 */
+	sockaddr *addrClient;
+	socklen_t lenAddrClient = sizeof(sockaddr);;
 	list<thread> lClient;
-
-	addrClient.sa_family = AF_INET;
-	lenAddrClient = sizeof(addrClient);
+	list<sockaddr> lAddr;
 
 // Begin
 	// If no socket
@@ -79,12 +81,15 @@ void Server::acceptConnection()
 
 		if(ret_select > 0)
 		{
-			fd = accept(fd_sock, &addrClient, &lenAddrClient);
+			addrClient = malloc(lenAddrClient);
+			fd = accept(fd_sock, addrClient, &lenAddrClient);
+
 			if(fd < 0)
 				log.write("Accept error : " + string(strerror(errno)),Log::ERR,typeid(this).name());
 
 			log.write("Server accepted connection",Log::DBG,typeid(this).name());
 
+			lAddr.push_back(*addrClient);
 			lClient.push_back(thread(&Server::run,this,fd));
 		}
 	}
@@ -93,6 +98,8 @@ void Server::acceptConnection()
 	// Delete all run instance
 	for(list<thread>::iterator it=lClient.begin();it != lClient.end();++it)
 		it->join();
+
+	// TODO Free lAddr
 }
 
 void Server::run(int fd)

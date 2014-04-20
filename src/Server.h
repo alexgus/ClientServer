@@ -53,27 +53,32 @@ public:
 
 private:
 	/**
-	 * For display informations
+	 * Log object for display informations
+	 * about the server.
 	 */
 	Log log;
 
 	/**
-	 * Wait socket
+	 * Wait socket of the server.
+	 * Can accept connection on this file descriptor.
 	 */
 	int fd_sock;
 
 	/**
-	 * Informations about the current address of this server
+	 * Informations about the current address
+	 * and port of this server.
 	 */
 	struct sockaddr_in addr;
 
 	/**
-	 * While this value is true, the server will wait for new connection
+	 * While this value is true, the server will wait for new connection.
+	 * Protected by mutex.
 	 */
 	bool waitAccept = true;
 
 	/**
-	 * Continue to talk with a client
+	 * Continue to talk with a client.
+	 * Protected by mutex.
 	 */
 	bool contRun = true;
 
@@ -88,32 +93,36 @@ private:
 	mutex mt_contRun;
 
 	/**
-	 * Parse informations sent by the client
-	 * @param fd File descriptor for communication
+	 * Parse informations sent by the client to this socket.
+	 * @param fd File descriptor for communication (socket)
 	 */
 	void run(int fd);
 
 	/**
-	 * Stop the communication with the client
+	 * Stop the communication with the client.
+	 * Change properly the state of contRun.
 	 */
 	void stopRun();
 
 public:
 	/**
 	 * Constructor of the class.
-	 * Initialize a socket
+	 * Initialize a socket with a port and an address.
 	 */
 	Server();
 
 	/**
 	 * Destroyer of the class.
-	 * Delete the socket
+	 * Delete the socket and stop connection with clients
 	 */
 	virtual ~Server();
 
 	/**
-	 * Wait for a client.
-	 * @return The file descriptor for writing to the accepted client
+	 * Wait for a client to be connect on the waiting port.
+	 * It launch next the parser (function run) in a thread
+	 * for communicating with the client.
+	 * Record too the thread with address and port of the client
+	 * in a list.
 	 */
 	void acceptConnection();
 
