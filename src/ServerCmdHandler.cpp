@@ -32,7 +32,7 @@ ServerCmdHandler& ServerCmdHandler::operator=(ServerCmdHandler &s)
 	return s;
 }
 
-void ServerCmdHandler::exec(int port)
+int ServerCmdHandler::exec(int port)
 {
 	if(this->cmd != NULL)
 	{
@@ -51,9 +51,11 @@ void ServerCmdHandler::exec(int port)
 			case Cmd::PUT:
 				break;
 			case Cmd::QUIT:
+				return 0;
 				break;
 			case Cmd::ERR:
 				break;
 		}
 	}
+	return -1;
 }

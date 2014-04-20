@@ -47,8 +47,9 @@ public:
 
 	/**
 	 * Execute the command
+	 * @return 1 if ok, -1 if not ok, 0 if quit command
 	 */
-	void exec(int port);
+	int exec(int port);
 
 	/**
 	 * Override operator =
