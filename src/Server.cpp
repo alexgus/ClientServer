@@ -111,7 +111,13 @@ void Server::run(int fd)
 		if((str = &(c->readString())) != NULL)
 		{
 			ServerCmdHandler *cmdHandler = new ServerCmdHandler(*str);
-			cmdHandler->exec(fd);
+			// If quit
+			if(cmdHandler->exec(fd) == 0)
+			{
+				this->mt_contRun.lock();
+				this->contRun = 0;
+				this->mt_contRun.unlock();
+			}
 			c->writeString("OK : " + *str);
 		}
 	}
