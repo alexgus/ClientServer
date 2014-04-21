@@ -50,15 +50,17 @@ int ServerCmdHandler::exec(int port)
 		list<string> opt = this->cmd->getOption();
 		list<string>::iterator it;
 
-		SendFile *send;
+		//SendFile *send;
 
 		switch(this->cmd->getCmd())
 		{
 			case Cmd::GET:
-				send = new SendFile(arg.front(),port);
-				send->send();
+				/*send = new SendFile(arg.front(),port);
+				send->send();*/
+				return 1;
 				break;
 			case Cmd::PUT:
+				return 1;
 				break;
 			case Cmd::QUIT:
 				return 0;
