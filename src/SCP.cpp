@@ -13,7 +13,7 @@ using namespace std;
 
 void cleanAndStop();
 
-Log log;
+Log l;
 Server *serv = NULL;
 Client *client = NULL;
 thread *th_serv = NULL;
@@ -34,23 +34,23 @@ int main()
 	}
 	catch(system_error &e)
 	{
-		log << "Launch Server/Client thread";
-		log << "What : " << e.what();
+		l << "Launch Server/Client thread";
+		l << "What : " << e.what();
 		cleanAndStop();
 	}
 	// Wait for server/client end
 	try
 	{
 		th_client ->join();
-		log << "Client terminated";
+		l << "Client terminated";
 		serv->stopServer();
 		th_serv->join();
-		log << "Serv terminated";
+		l << "Serv terminated";
 	}
 	catch(system_error &e)
 	{
-		log << "Join Server/Client";
-		log << "What : " << e.what();
+		l << "Join Server/Client";
+		l << "What : " << e.what();
 		cleanAndStop();
 	}
 
