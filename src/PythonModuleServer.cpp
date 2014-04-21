@@ -50,8 +50,9 @@ int PythonModuleServer::exec(string &s)
 	Py_DECREF(pArgs); // pArgs useless now
 	if (pValue != NULL)
 	{
-		printf("Result of call: %ld\n", PyLong_AsLong(pValue));
+		int ret = (int) PyLong_AsLong(pValue);
 		Py_DECREF(pValue);
+		return ret;
 	}
 	else
 	{
