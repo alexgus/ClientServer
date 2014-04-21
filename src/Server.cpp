@@ -81,7 +81,7 @@ void Server::acceptConnection()
 
 		if(ret_select > 0)
 		{
-			addrClient = malloc(lenAddrClient);
+			addrClient = (sockaddr*) malloc(lenAddrClient);
 			fd = accept(fd_sock, addrClient, &lenAddrClient);
 
 			if(fd < 0)
