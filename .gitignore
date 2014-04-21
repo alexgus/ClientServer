@@ -10,3 +10,8 @@
 /.project~
 /.settings
 /*.send
+/.pydevproject
+/__pycache__
+/gmon.out
+/perf.data
+/oprofile_data
