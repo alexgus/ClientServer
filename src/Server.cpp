@@ -134,6 +134,8 @@ void Server::run(int fd)
 					c->writeString("Command not recognized : " + *str);
 					break;
 			}
+
+			delete cmdHandler;
 		}
 	}
 
