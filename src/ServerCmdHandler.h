@@ -14,6 +14,7 @@
 #include "Log.h"
 #include "Cmd.h"
 #include "SendFile.h"
+#include "PythonModuleServer.h"
 
 using namespace std;
 
@@ -67,6 +68,17 @@ private:
 	 * Log file
 	 */
 	Log log;
+
+	/**
+	 * For sending commands to python modules
+	 */
+	PythonModuleServer *pyCmd;
+
+	/**
+	 * String for python module
+	 */
+	string *pyModuleStr;
+
 };
 
 #endif /* SERVERCMDHANDLER_H_ */

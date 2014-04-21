@@ -10,21 +10,31 @@
 ServerCmdHandler::ServerCmdHandler()
 {
 	this->cmd = NULL;
+	this->pyCmd = NULL;
+	this->pyModuleStr = NULL;
 }
 
 ServerCmdHandler::ServerCmdHandler(Cmd &c)
 {
 	this->cmd = &c;
+	this->pyCmd = NULL;
+	this->pyModuleStr = NULL;
 }
 
 ServerCmdHandler::ServerCmdHandler(string &s)
 {
 	this->cmd = new Cmd(s);
+	if(this->cmd->getCmd() == Cmd::ERR)
+	{
+		 this->pyCmd = new PythonModuleServer();
+		 this->pyModuleStr = &s;
+	}
 }
 
 ServerCmdHandler::~ServerCmdHandler()
 {
 	delete this->cmd;
+	delete this->pyCmd;
 }
 
 ServerCmdHandler& ServerCmdHandler::operator=(ServerCmdHandler &s)
@@ -54,6 +64,7 @@ int ServerCmdHandler::exec(int port)
 				return 0;
 				break;
 			case Cmd::ERR:
+				return this->pyCmd->exec(*this->pyModuleStr);
 				break;
 		}
 	}
