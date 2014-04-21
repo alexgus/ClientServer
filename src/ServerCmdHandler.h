@@ -14,7 +14,7 @@
 #include "Log.h"
 #include "Cmd.h"
 #include "SendFile.h"
-#include "PythonModuleServer.h"
+#include "PythonModuleLoader.h"
 
 using namespace std;
 
@@ -72,7 +72,7 @@ private:
 	/**
 	 * For sending commands to python modules
 	 */
-	PythonModuleServer *pyCmd;
+	PythonModuleLoader *pyCmd;
 
 	/**
 	 * String for python module

@@ -26,7 +26,7 @@ ServerCmdHandler::ServerCmdHandler(string &s)
 	this->cmd = new Cmd(s);
 	if(this->cmd->getCmd() == Cmd::ERR)
 	{
-		 this->pyCmd = new PythonModuleServer();
+		 this->pyCmd = new PythonModuleLoader(string("server"),string("recv"));
 		 this->pyModuleStr = &s;
 	}
 }

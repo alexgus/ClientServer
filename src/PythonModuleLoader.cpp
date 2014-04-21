@@ -1,13 +1,13 @@
-#include "PythonModuleServer.h"
+#include "PythonModuleLoader.h"
 
-PythonModuleServer::PythonModuleServer()
+PythonModuleLoader::PythonModuleLoader(const string &file, const string &fun)
 {
 	PyObject *pName, *pModule;
 
 	Py_Initialize();
 	PySys_SetPath(this->PATH_TO_MODULE); // Set the path to the module
 
-	pName = PyUnicode_FromString(this->FILE.c_str()); // Convert the name of the module
+	pName = PyUnicode_FromString(file.c_str()); // Convert the name of the module
 
 	pModule = PyImport_Import(pName); // Load the module
 	Py_DECREF(pName); // Free pName
@@ -15,14 +15,14 @@ PythonModuleServer::PythonModuleServer()
 	// If the module doesn't exist
 	if (pModule != NULL)
 	{
-		pFunc = PyObject_GetAttrString(pModule, this->FUN.c_str()); // Load the function
+		pFunc = PyObject_GetAttrString(pModule, fun.c_str()); // Load the function
 
 		// If the function exist and is callable
 		if (!(pFunc && PyCallable_Check(pFunc)))
 		{
 			if (PyErr_Occurred())
 				PyErr_Print();
-			fprintf(stderr, "Cannot find function \"%s\"\n", this->FUN.c_str());
+			fprintf(stderr, "Cannot find function \"%s\"\n", fun.c_str());
 		}
 		Py_XDECREF(pFunc);
 		Py_DECREF(pModule);
@@ -30,16 +30,16 @@ PythonModuleServer::PythonModuleServer()
 	else
 	{
 		PyErr_Print();
-		fprintf(stderr, "Failed to load \"%s\"\n", this->FILE.c_str());
+		fprintf(stderr, "Failed to load \"%s\"\n", file.c_str());
 	}
 }
 
-PythonModuleServer::~PythonModuleServer()
+PythonModuleLoader::~PythonModuleLoader()
 {
     Py_Finalize();
 }
 
-int PythonModuleServer::exec(string &s)
+int PythonModuleLoader::exec(string &s)
 {
 	PyObject *pValue, *pArgs;
 
