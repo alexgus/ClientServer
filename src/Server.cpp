@@ -118,15 +118,22 @@ void Server::run(int fd)
 		if((str = &(c->readString())) != NULL)
 		{
 			ServerCmdHandler *cmdHandler = new ServerCmdHandler(*str);
-			// If quit
-			if(cmdHandler->exec(fd) == 0)
+
+			switch(cmdHandler->exec(fd))
 			{
-				this->stopRun();
-				c->writeString("Bye !");
-				log.write("Server finished",Log::DBG,typeid(this).name());
-				return;
+				case 0: // QUIT
+					this->stopRun();
+					c->writeString("Bye !");
+					log.write("Server finished",Log::DBG,typeid(this).name());
+					return;
+					break;
+				case 1:
+					c->writeString("OK : " + *str);
+					break;
+				case -1:
+					c->writeString("Command not recognized : " + *str);
+					break;
 			}
-			c->writeString("OK : " + *str);
 		}
 	}
 
