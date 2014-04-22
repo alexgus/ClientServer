@@ -12,7 +12,7 @@ PythonModuleLoader::PythonModuleLoader(const string &file, const string &fun)
 	pModule = PyImport_Import(pName); // Load the module
 	Py_DECREF(pName); // Free pName
 
-	// If the module doesn't exist
+	// If the module exists
 	if (pModule != NULL)
 	{
 		pFunc = PyObject_GetAttrString(pModule, fun.c_str()); // Load the function
