@@ -14,6 +14,7 @@
 #include <string>
 #include <string.h>
 #include <errno.h>
+#include <typeinfo>
 
 #include "Log.h"
 

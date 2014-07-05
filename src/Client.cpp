@@ -23,12 +23,12 @@ int Client::initHostInfo(string address, int port){//
 char const * p = to_string(port).c_str();
 	status = getaddrinfo(address.c_str() , p, &host_info, &host_info_list);
 		 if(status != 0){
-			log.write("Client : Failed to get Hosts Info",Log::WARN);
+			log.write("Client : Failed to get Hosts Info",typeid(*this).name(),Log::WARN);
 
 			return status;
 		 }
 
-		log.write("Client is ready to connect to the server",Log::DBG);
+		log.write("Client is ready to connect to the server",typeid(*this).name(),Log::DBG);
 
 		return status;
 }
@@ -40,14 +40,14 @@ int Client::connection(){
 			host_info_list->ai_protocol);
 
 		 if (fd_sock == -1){
-			 log.write("Client : Failed creating the socket",Log::ERR);
+			 log.write("Client : Failed creating the socket",typeid(*this).name(),Log::ERR);
 			 return -1;
 		 }
 
 		 status = connect(fd_sock, host_info_list->ai_addr, host_info_list->ai_addrlen);
 
 		 if (status == -1){
-			 log.write("Client : Failed to connect to Host",Log::ERR);
+			 log.write("Client : Failed to connect to Host",typeid(*this).name(),Log::ERR);
 			 return -1;
 		 }
 
@@ -76,9 +76,9 @@ string msg, rcv;
 
 int Client::sendCmd(string cmd){
 
-	log.write("Client [SEND] : "+cmd,Log::DBG);
+	log.write("Client [SEND] : "+cmd,typeid(*this).name(),Log::DBG);
 	if(send(fd_sock,cmd.c_str(),cmd.length(),0)==-1){
-			log.write("Client : Error when sending message",Log::ERR);
+			log.write("Client : Error when sending message",typeid(*this).name(),Log::ERR);
 			return -1;
 	}
 
@@ -90,12 +90,12 @@ string Client::receive(){
 	char buff[256];
 	int size;
 	if((size=recv(fd_sock,buff,256,0))==-1){
-			log.write("Client : Error when receiving message",Log::ERR);
+			log.write("Client : Error when receiving message",typeid(*this).name(),Log::ERR);
 			return "";
 	}
 
 	buff[size]='\0';
-	log.write("Client [RECV] : "+(string)buff,Log::DBG);
+	log.write("Client [RECV] : "+(string)buff,typeid(*this).name(),Log::DBG);
 	return (string)buff;
 }
 void Client::init(){

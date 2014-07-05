@@ -18,7 +18,7 @@ SendFile::SendFile(string path, int clientPort)
 	char num[6];
 	sprintf(num,"%d",clientPort);
 
-	log.write("Sending file " + path + " to " + num,Log::DBG,typeid(this).name());
+	log.write("Sending file " + path + " to " + num,typeid(this).name(),Log::DBG);
 
 	this->com = new Com(clientPort,{2,0});
 	this->file.open(path,ifstream::in);
@@ -41,7 +41,7 @@ void SendFile::send()
 	lenFile = this->file.tellg();
 	this->file.seekg(0,this->file.beg);
 
-	log.write("The size of the file to send is " + lenFile,Log::DBG,typeid(this).name());
+	log.write("The size of the file to send is " + lenFile,typeid(this).name(),Log::DBG);
 
 	// Allocates the buffer for reading
 	if(lenFile < MAX_MTU)

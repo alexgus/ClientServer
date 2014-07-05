@@ -14,9 +14,7 @@ Log::Log()
 
 	// If the file isn't open, display an error on cerr
 	if(!file.is_open())
-	{
 		cerr << endl << ">>> Can't open Log file !" << endl;
-	}
 }
 
 Log::~Log()
@@ -32,7 +30,7 @@ Log& Log::operator<<(string s)
 	return *this;
 }
 
-void Log::write(string s, LEVEL l, string callClass)
+void Log::write(string s, string callClass, LEVEL l)
 {
 	writeTime();
 
@@ -40,35 +38,33 @@ void Log::write(string s, LEVEL l, string callClass)
 	{
 #ifdef DEBUG
 		case DBG:
-			file << "\t[DEBUG]\t";
+			file << setw(SETW_LEVEL) << "[DEBUG]";
 			break;
 #endif
 		case WARN:
-			file << "\t[WARN]\t";
+			file << setw(SETW_LEVEL) << "[WARN]";
 			break;
 		case ERR:
-			file << "\t[ERR]\t";
+			file << setw(SETW_LEVEL) << "[ERR]";
 			break;
 	}
-
-	file << "[" + callClass + "]\t" << s << endl;
-}
-
-void Log::write(string s, LEVEL l)
-{
-	this->write(s,l,string("NULL--"));
+#ifndef DEBUG
+	if(l != LEVEL.DBG))
+#endif
+		file << setw(SETW_CLASS) << "[" + string(&callClass.c_str()[1]) + "]\t" << s << endl;
 }
 
 void Log::writeTime()
 {
 	time_t timestamp;
-	struct tm* local;
+	char buf[20];
 
 	// Get current time
 	time(&timestamp);
-	local = localtime(&timestamp); // Convert to struct tm
 
-	file << "[" << local->tm_year + 1900 << "/" << local->tm_mon+1 << "/" << local->tm_mday << " " << local->tm_hour << ":" << local->tm_min << ":" << local->tm_sec << "] ";
+	// Forlat time
+	strftime(buf,20,"%D %T",localtime(&timestamp));
+	file << "[" << buf << "] ";
 }
 
 

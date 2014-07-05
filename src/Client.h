@@ -16,6 +16,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <errno.h>
+#include <typeinfo>
 #include <cstring>
 #include <iostream>
 #include <string>
@@ -26,7 +27,7 @@ using namespace std;
 
 
 //Target host details:
-#define PORT  2370
+#define PORT  2371
 #define HOST "192.168.1.30"
 
 class Client {

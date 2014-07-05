@@ -9,23 +9,23 @@
 
 Server::Server()
 {
-	log.write("Initialize Server",Log::DBG,typeid(this).name());
+	log.write("Initialize Server",typeid(*this).name(),Log::DBG);
 
 	// Create the socket
 	fd_sock = socket(AF_INET, SOCK_STREAM, 0);
 	if(fd_sock == -1)
-		log.write("Socket creation error : " + string(strerror(errno)),Log::ERR,typeid(this).name());
+		log.write("Socket creation error : " + string(strerror(errno)),typeid(*this).name(),Log::ERR);
 
 	int optVal =1;
-	if(setsockopt(fd_sock,SOL_SOCKET,SO_REUSEADDR,&optVal,sizeof(int)) == -1)
-		log.write("Server : Failed to change socket option : " + string(strerror(errno)),Log::ERR,typeid(this).name());
+	if(setsockopt(fd_sock,SOL_SOCKET,SO_REUSEADDR ,&optVal,sizeof(int)) == -1)
+		log.write("Server : Failed to change socket option : " + string(strerror(errno)),typeid(*this).name(),Log::ERR);
 
 	// Bind the socket to the system
 	addr.sin_family = AF_INET;
 	addr.sin_addr.s_addr = htonl(INADDR_ANY); // Conversion big indian
 	addr.sin_port = htons(PORT);
 	if(bind(fd_sock,(struct sockaddr *) &addr, sizeof(addr)) == -1)
-		log.write("Binding error : " + string(strerror(errno)),Log::ERR,typeid(this).name());
+		log.write("Binding error : " + string(strerror(errno)),typeid(*this).name(),Log::ERR);
 
 	// Set the listen queue
 	listen(fd_sock, 5); // 5 = limit size of the connection queue
@@ -60,7 +60,7 @@ void Server::acceptConnection()
 	if(fd_sock < 0)
 		return;
 
-	log.write("Server wait for connection",Log::DBG);
+	log.write("Server wait for connection",typeid(*this).name(),Log::DBG);
 
 	this->mt_waitAccept.lock();
 	while(this->waitAccept)
@@ -75,7 +75,7 @@ void Server::acceptConnection()
 
 		if((ret_select = select(fd_sock+1,&read,NULL,NULL,&timeoutAccept)) < 0)
 		{
-			log.write("Select accept error : " + string(strerror(errno)),Log::ERR,typeid(this).name());
+			log.write("Select accept error : " + string(strerror(errno)),typeid(*this).name(),Log::ERR);
 			return;
 		}
 
@@ -85,9 +85,9 @@ void Server::acceptConnection()
 			fd = accept(fd_sock, addrClient, &lenAddrClient);
 
 			if(fd < 0)
-				log.write("Accept error : " + string(strerror(errno)),Log::ERR,typeid(this).name());
+				log.write("Accept error : " + string(strerror(errno)),typeid(*this).name(),Log::ERR);
 
-			log.write("Server accepted connection",Log::DBG,typeid(this).name());
+			log.write("Server accepted connection",typeid(*this).name(),Log::DBG);
 
 			lAddr.push_back(*addrClient);
 			lClient.push_back(thread(&Server::run,this,fd));
@@ -124,7 +124,7 @@ void Server::run(int fd)
 				case 0: // QUIT
 					this->stopRun();
 					c->writeString("Bye !");
-					log.write("Server finished",Log::DBG,typeid(this).name());
+					log.write("Server finished",typeid(*this).name(),Log::DBG);
 					return;
 					break;
 				case 1:

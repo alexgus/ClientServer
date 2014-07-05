@@ -45,7 +45,7 @@ string& Com::readString()
 
 	if((ret_select = select(fd+1,&readSet,NULL,NULL,&t)) < 0)
 	{
-		log.write("Select read error : " + string(strerror(errno)),Log::ERR);
+		log.write("Select read error : " + string(strerror(errno)),typeid(*this).name(),Log::ERR);
 		return *str;
 	}
 
