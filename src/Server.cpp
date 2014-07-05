@@ -115,7 +115,8 @@ void Server::run(int fd)
 	while(this->contRun)
 	{
 		this->mt_contRun.unlock();
-		if((str = &(c->readString())) != NULL)
+		str = &(c->readString());
+		if(*str != "")
 		{
 			log.write(string("Server [RECV] : ") + *str, typeid(*this).name(), Log::DBG);
 			ServerCmdHandler *cmdHandler = new ServerCmdHandler(*str);
