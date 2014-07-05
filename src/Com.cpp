@@ -37,7 +37,7 @@ string& Com::readString()
 
 	char buf[BUFFER_SIZE];
 	int nbRead = 0;
-	string *str = NULL;
+	string *str = new string("");
 
 	ret_select = 0;
 	FD_ZERO(&readSet);

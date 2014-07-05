@@ -11,6 +11,7 @@
 #include <string>
 #include <fstream>
 #include <typeinfo>
+#include <iostream>
 
 #include "Log.h"
 #include "Com.h"

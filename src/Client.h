@@ -23,6 +23,7 @@
 #include <netdb.h>
 #include <stdlib.h>
 #include "Log.h"
+#include "Com.h"
 using namespace std;
 
 

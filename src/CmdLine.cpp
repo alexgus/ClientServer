@@ -38,14 +38,15 @@ CmdLine::CmdLine(string commande)
 		str = str + *it;
 		it++;
 	}
+
 	if(str == "GET")
-		this->setCmd(CmdLine::GET);
+		this->cmd = GET;
 	else if (str == "PUT")
-		this->setCmd(CmdLine::PUT);
+		this->cmd = PUT;
 	else if (str == "QUIT")
-		this->setCmd(CmdLine::QUIT);
+		this->cmd = QUIT;
 	else
-		this->setCmd(CmdLine::ERR);
+		this->cmd = ERR;
 
 	str = "";
 
@@ -56,9 +57,9 @@ CmdLine::CmdLine(string commande)
 		{
 			// Search end of the option name
 			str = "";
-			while ((it != commande.cend())&& ((*it != ' ')
-											|| (*it != '\r')
-											|| (*it != '\n')))
+			while ((it != commande.cend())&& ((*it != ' ')))
+											/*|| (*it != '\r')
+											|| (*it != '\n')))*/
 			{
 				str = str + *it;
 				++it;
@@ -79,9 +80,9 @@ CmdLine::CmdLine(string commande)
 				{
 					str = "";
 
-					while ((it != commande.cend())&& ((*it != ' ')
-													|| (*it != '\r')
-													|| (*it != '\n')))
+					while ((it != commande.cend())&& ((*it != ' ')))
+													/*|| (*it != '\r')
+													|| (*it != '\n')))*/
 					{
 						str = str + *it;
 						++it;
@@ -89,9 +90,10 @@ CmdLine::CmdLine(string commande)
 
 					// Set the value and add it to the vector
 					o->setValue(str);
-					this->options->push_back(o);
 				}
 			}
+
+			this->options->push_back(o);
 		}
 		else
 			it++;

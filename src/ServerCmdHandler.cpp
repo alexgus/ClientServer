@@ -57,7 +57,7 @@ int ServerCmdHandler::exec(int port)
 					++it;
 
 				if(it == cmd->getOptions()->end())
-				{
+				{ // TODO DEBUG
 					cout << "No valid options" << endl;
 					return -1;
 				}
