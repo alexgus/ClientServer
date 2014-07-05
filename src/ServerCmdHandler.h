@@ -33,7 +33,7 @@ public:
 	 * Class constructor.
 	 * @param c Command to handle
 	 */
-	ServerCmdHandler(Cmd &c);
+	ServerCmdHandler(CmdLine &c);
 
 	/**
 	 * Class constructor.
@@ -62,7 +62,7 @@ private:
 	/**
 	 * The command to handle
 	 */
-	Cmd* cmd;
+	CmdLine* cmd;
 
 	/**
 	 * Log file

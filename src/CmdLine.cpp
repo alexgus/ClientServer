@@ -7,23 +7,23 @@
 
 #include "Cmd.h"
 
-Cmd::Cmd()
+CmdLine::CmdLine()
 {
 	this->cmd = CMD::ERR;
 }
 
-Cmd::Cmd(CMD cmd) {
+CmdLine::CmdLine(CMD cmd) {
 	this->cmd = cmd;
 }
 
-Cmd::Cmd(CMD cmd, list<string> &option, list<string> &arg) {
+CmdLine::CmdLine(CMD cmd, list<string> &option, list<string> &arg) {
 	this->cmd = cmd;
 	this->option = option;
 	this->arg = arg;
 }
 
 // FIXME Delete \r\n at the end of the string
-Cmd::Cmd(string commande) {
+CmdLine::CmdLine(string commande) {
 	this->cmd = CMD::GET;
 
 	string str;
@@ -34,13 +34,13 @@ Cmd::Cmd(string commande) {
 		it++;
 	}
 	if(str == "GET")
-		this->setCmd(Cmd::GET);
+		this->setCmd(CmdLine::GET);
 	else if (str == "PUT")
-		this->setCmd(Cmd::PUT);
+		this->setCmd(CmdLine::PUT);
 	else if (str == "QUIT")
-		this->setCmd(Cmd::QUIT);
+		this->setCmd(CmdLine::QUIT);
 	else
-		this->setCmd(Cmd::ERR);
+		this->setCmd(CmdLine::ERR);
 	str = "";
 
 	//search option and arg
@@ -67,7 +67,7 @@ Cmd::Cmd(string commande) {
 /**
  * Class' destructor
  */
-Cmd::~Cmd() {
+CmdLine::~CmdLine() {
 
 }
 
@@ -75,15 +75,15 @@ Cmd::~Cmd() {
  * getter
  */
 
-Cmd::CMD Cmd::getCmd() {
+CmdLine::CMD CmdLine::getCmd() {
 	return this->cmd;
 }
 
-list<string> Cmd::getOption() {
+list<string> CmdLine::getOption() {
 	return this->option;
 }
 
-list<string> Cmd::getArg() {
+list<string> CmdLine::getArg() {
 	return this->arg;
 }
 
@@ -91,15 +91,15 @@ list<string> Cmd::getArg() {
  * Setter
  */
 
-void Cmd::setCmd(CMD cmd) {
+void CmdLine::setCmd(CMD cmd) {
 	this->cmd = cmd;
 }
 
-void Cmd::setOption(list<string> option) {
+void CmdLine::setOption(list<string> option) {
 	this->option = option;
 }
 
-void Cmd::setArg(list<string> arg) {
+void CmdLine::setArg(list<string> arg) {
 	this->arg = arg;
 }
 
@@ -107,11 +107,11 @@ void Cmd::setArg(list<string> arg) {
  * methode of add option or argument to the cmd
  */
 
-void Cmd::addOption(string option) {
+void CmdLine::addOption(string option) {
 	this->option.push_back(option);
 }
 
-void Cmd::addArg(string arg) {
+void CmdLine::addArg(string arg) {
 	this->arg.push_back(arg);
 }
 
@@ -119,25 +119,25 @@ void Cmd::addArg(string arg) {
  * operator
  */
 
-Cmd& Cmd::operator=(const Cmd others) {
+CmdLine& CmdLine::operator=(const CmdLine others) {
 	this->cmd = others.cmd;
 	this->arg = others.arg;
 	this->option = others.option;
 	return *this;
 }
 
-std::ostream& operator<<(ostream& os, const Cmd& cmd) {
+std::ostream& operator<<(ostream& os, const CmdLine& cmd) {
 
 	//list<string>::iterator it;
 
 	switch (cmd.cmd) {
-	case Cmd::GET:
+	case CmdLine::GET:
 		os << "GET";
 		break;
-	case Cmd::PUT:
+	case CmdLine::PUT:
 		os << "PUT";
 		break;
-	case Cmd::QUIT:
+	case CmdLine::QUIT:
 		os << "QUIT";
 		break;
 	default:

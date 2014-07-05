@@ -14,7 +14,7 @@ ServerCmdHandler::ServerCmdHandler()
 	this->pyModuleStr = NULL;
 }
 
-ServerCmdHandler::ServerCmdHandler(Cmd &c)
+ServerCmdHandler::ServerCmdHandler(CmdLine &c)
 {
 	this->cmd = &c;
 	this->pyCmd = NULL;
@@ -23,8 +23,8 @@ ServerCmdHandler::ServerCmdHandler(Cmd &c)
 
 ServerCmdHandler::ServerCmdHandler(string &s)
 {
-	this->cmd = new Cmd(s);
-	if(this->cmd->getCmd() == Cmd::ERR)
+	this->cmd = new CmdLine(s);
+	if(this->cmd->getCmd() == CmdLine::ERR)
 	{
 		 this->pyCmd = new PythonModuleLoader(string("server"),string("recv"));
 		 this->pyModuleStr = &s;
@@ -54,18 +54,18 @@ int ServerCmdHandler::exec(int port)
 
 		switch(this->cmd->getCmd())
 		{
-			case Cmd::GET:
+			case CmdLine::GET:
 				/*send = new SendFile(arg.front(),port);
 				send->send();*/
 				return 1;
 				break;
-			case Cmd::PUT:
+			case CmdLine::PUT:
 				return 1;
 				break;
-			case Cmd::QUIT:
+			case CmdLine::QUIT:
 				return 0;
 				break;
-			case Cmd::ERR:
+			case CmdLine::ERR:
 				return this->pyCmd->exec(*this->pyModuleStr);
 				break;
 		}
