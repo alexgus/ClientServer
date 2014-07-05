@@ -28,12 +28,10 @@ using namespace std;
 
 //Target host details:
 #define PORT  2371
-#define HOST "192.168.1.30"
+#define HOST "192.168.1.20"
 
-class Client {
-
-
-
+class Client
+{
 private :
 
 	Log log;
@@ -50,10 +48,10 @@ public :
 
 	Client();
 	Client(string address, int port);
-   virtual ~Client();
+	virtual ~Client();
 
-   int initHostInfo(string address, int port);
-   void run();
+	int initHostInfo(string address, int port);
+	void run();
 };
 
 
