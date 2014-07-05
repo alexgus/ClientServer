@@ -26,6 +26,7 @@ ServerCmdHandler::ServerCmdHandler(string &s)
 	this->cmd = new CmdLine(s);
 	if(this->cmd->getCmd() == CmdLine::ERR)
 	{
+		// TODO Check if the file exists
 		 this->pyCmd = new PythonModuleLoader(string("server"),string("recv"));
 		 this->pyModuleStr = &s;
 	}
