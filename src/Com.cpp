@@ -53,7 +53,7 @@ string& Com::readString()
 	if(ret_select > 0)
 	{
 		// Read command
-		nbRead = read(fd,buf,BUFFER_SIZE);
+		nbRead = read(fd,buf,BUFFER_SIZE-1);
 		buf[nbRead] = '\0'; // Add end of string
 
 		str = new string(buf);
