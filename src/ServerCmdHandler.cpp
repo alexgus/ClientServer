@@ -45,19 +45,28 @@ ServerCmdHandler& ServerCmdHandler::operator=(ServerCmdHandler &s)
 
 int ServerCmdHandler::exec(int port)
 {
+	vector<CmdOption*>::iterator it;
+
 	if(this->cmd != NULL)
 	{
-		vector<CmdOption> opt;
-		vector<string>::iterator it;
-
-		//SendFile *send;
-
 		switch(this->cmd->getCmd())
 		{
 			case CmdLine::GET:
-				/*send = new SendFile(arg.front(),port);
-				send->send();*/
-				return 1;
+				it = cmd->getOptions()->begin();
+				while(it != cmd->getOptions()->end() && (*it)->getOption() != "-f")
+					++it;
+
+				if(it == cmd->getOptions()->end())
+				{
+					cout << "No valid options" << endl;
+					return -1;
+				}
+				else
+				{
+					SendFile *s = new SendFile((*it)->getValue(),port);
+					s->send();
+					return 1;
+				}
 				break;
 			case CmdLine::PUT:
 				return 1;

@@ -62,7 +62,7 @@ public:
 	 * Get options list
 	 * @return Options list
 	 */
-	const vector<CmdOption*>* getOptions() const
+	vector<CmdOption*>* getOptions() const
 	{
 		return options;
 	}
