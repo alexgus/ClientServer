@@ -65,17 +65,20 @@ void Client::run()
 		cout << "Client : type a command to send"<<endl;
 		getline(cin,msg);
 
-		sendCmd(msg);
-
-		cout<<"Client : waiting for an answer .."<<endl;
-		rcv = receive();
-		cout<<"Client [RCV] : "<<rcv<<endl;
-
-		if(rcv == "Bye !")
+		if(msg.length() >= 3)
 		{
-			cout<<"Client exiting -- Closing socket"<<endl;
-			close(fd_sock);
-			return;
+			sendCmd(msg);
+
+			cout<<"Client : waiting for an answer .."<<endl;
+			rcv = receive();
+			cout<<"Client [RCV] : "<<rcv<<endl;
+
+			if(rcv == "Bye !")
+			{
+				cout<<"Client exiting -- Closing socket"<<endl;
+				close(fd_sock);
+				return;
+			}
 		}
 	}
 }
