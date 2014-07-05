@@ -5,7 +5,7 @@
  *      Author: kevin
  */
 
-#include "Cmd.h"
+#include "CmdLine.h"
 
 CmdLine::CmdLine()
 {

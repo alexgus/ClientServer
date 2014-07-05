@@ -12,7 +12,7 @@
 #include <string>
 
 #include "Log.h"
-#include "Cmd.h"
+#include "CmdLine.h"
 #include "SendFile.h"
 #include "PythonModuleLoader.h"
 
