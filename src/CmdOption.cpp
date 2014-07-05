@@ -9,8 +9,8 @@
 
 CmdOption::CmdOption()
 {
-	this->option = 0;
-	this->option = 0;
+	this->option = "";
+	this->option = "";
 }
 
 CmdOption::~CmdOption()
@@ -19,5 +19,5 @@ CmdOption::~CmdOption()
 
 bool CmdOption::valueExist()
 {
-	return (this->value != 0);
+	return (this->value != "");
 }

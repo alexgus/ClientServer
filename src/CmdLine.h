@@ -10,8 +10,10 @@
 
 #include <string>
 #include <iostream>
-#include <list>
+#include <vector>
 #include <iterator>
+
+#include "CmdOption.h"
 using namespace std;
 
 class CmdLine
@@ -33,58 +35,13 @@ public:
 	 */
 	CmdLine();
 	CmdLine(CMD cmd);
-	CmdLine(CMD cmd, list<string> &option, list<string> &arg);
+	CmdLine(CMD cmd, vector<CmdOption*> *o);
 	CmdLine(string commande);
 
 	/**
 	 * Class' destroyer
 	 */
 	virtual ~CmdLine();
-
-	/**
-	 * Get the command in the line
-	 */
-	CMD getCmd();
-
-	/**
-	 * Get options of the command
-	 * @return (list) Options of the command
-	 */
-	list<string> getOption();
-
-	/**
-	 * Get arguments of the command
-	 * @return (list) Arguments of the command
-	 */
-	list<string> getArg();
-
-	/**
-	 * Set the command in the line
-	 */
-	void setCmd(CMD cmd);
-
-	/**
-	 * Set options in the commands
-	 * @param option
-	 */
-	void setOption(list<string> option);
-
-	/**
-	 * Set Arguments of the arguments
-	 * @param arg
-	 */
-	void setArg(list<string> arg);
-
-	/**
-	 * Method for adding options to the command line
-	 */
-	void addOption(string option);
-
-	/**
-	 * Method for adding arguments to the command line
-	 * @param arg
-	 */
-	void addArg(string arg);
 
 	/**
 	 * Assign a command line to the current object
@@ -101,6 +58,42 @@ public:
 	 */
 	friend std::ostream& operator<<(std::ostream& os, const CmdLine& cmd);
 
+	/**
+	 * Get options list
+	 * @return Options list
+	 */
+	const vector<CmdOption*>* getOptions() const
+	{
+		return options;
+	}
+
+	/**
+	 * Set options list
+	 * @param options options list
+	 */
+	void setOptions(vector<CmdOption*>* options)
+	{
+		this->options = options;
+	}
+
+	/**
+	 * Get the current command
+	 * @return The command
+	 */
+	CMD getCmd()
+	{
+		return cmd;
+	}
+
+	/**
+	 * Set the current command
+	 * @param c The command to set
+	 */
+	void setCmd(CMD c)
+	{
+		this->cmd = c;
+	}
+
 private:
 
 	/**
@@ -111,12 +104,7 @@ private:
 	/**
 	 * List of options
 	 */
-	list<string> option;
-
-	/**
-	 * List of arguments
-	 */
-	list<string> arg;
+	vector<CmdOption*> *options;
 };
 
 #endif /*CMD_H_ */

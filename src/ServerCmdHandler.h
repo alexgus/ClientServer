@@ -10,9 +10,11 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include "Log.h"
 #include "CmdLine.h"
+#include "CmdOption.h"
 #include "SendFile.h"
 #include "PythonModuleLoader.h"
 

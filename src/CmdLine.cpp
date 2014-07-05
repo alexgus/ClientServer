@@ -10,26 +10,31 @@
 CmdLine::CmdLine()
 {
 	this->cmd = CMD::ERR;
+	this->options = new vector<CmdOption*>();
 }
 
-CmdLine::CmdLine(CMD cmd) {
+CmdLine::CmdLine(CMD cmd)
+{
 	this->cmd = cmd;
+	this->options = new vector<CmdOption*>();
 }
 
-CmdLine::CmdLine(CMD cmd, list<string> &option, list<string> &arg) {
+CmdLine::CmdLine(CMD cmd, vector<CmdOption*> *o)
+{
 	this->cmd = cmd;
-	this->option = option;
-	this->arg = arg;
+	this->options = o;
 }
 
-// FIXME Delete \r\n at the end of the string
-CmdLine::CmdLine(string commande) {
+CmdLine::CmdLine(string commande)
+{
 	this->cmd = CMD::GET;
+	this->options = new vector<CmdOption*>();
 
 	string str;
 	auto it = commande.cbegin();
 	//
-	while ((*it != ' ') && (it != commande.cend())) {
+	while ((*it != ' ') && (it != commande.cend()))
+	{
 		str = str + *it;
 		it++;
 	}
@@ -41,23 +46,52 @@ CmdLine::CmdLine(string commande) {
 		this->setCmd(CmdLine::QUIT);
 	else
 		this->setCmd(CmdLine::ERR);
+
 	str = "";
 
-	//search option and arg
-	while (it != commande.cend()){
+	//search option
+	while (it != commande.cend())
+	{
 		if(*it!=' ')
 		{
+			// Search end of the option name
 			str = "";
-			while ((*it != ' ') && (it != commande.cend())){
+			while ((it != commande.cend())&& ((*it != ' ')
+											|| (*it != '\r')
+											|| (*it != '\n')))
+			{
 				str = str + *it;
-				it++;
+				++it;
 			}
-			//add option whitout '-'
-			if(str[0] == '-')
-				this->addOption(str.assign(str.cbegin()+1, str.cend()));
-			//add arg
-			else
-				this->addArg(str);
+
+			// Insert name of the option
+			CmdOption *o = new CmdOption();
+			o->setOption(str);
+
+			// Search for value
+			if(it != commande.cend())
+			{
+				// Search argument
+				while ((it != commande.cend())&& (*it == ' '))
+					++it;
+
+				if(it != commande.cend() && *it != '-')
+				{
+					str = "";
+
+					while ((it != commande.cend())&& ((*it != ' ')
+													|| (*it != '\r')
+													|| (*it != '\n')))
+					{
+						str = str + *it;
+						++it;
+					}
+
+					// Set the value and add it to the vector
+					o->setValue(str);
+					this->options->push_back(o);
+				}
+			}
 		}
 		else
 			it++;
@@ -67,97 +101,36 @@ CmdLine::CmdLine(string commande) {
 /**
  * Class' destructor
  */
-CmdLine::~CmdLine() {
+CmdLine::~CmdLine()
+{
 
 }
 
-/**
- * getter
- */
-
-CmdLine::CMD CmdLine::getCmd() {
-	return this->cmd;
-}
-
-list<string> CmdLine::getOption() {
-	return this->option;
-}
-
-list<string> CmdLine::getArg() {
-	return this->arg;
-}
-
-/**
- * Setter
- */
-
-void CmdLine::setCmd(CMD cmd) {
-	this->cmd = cmd;
-}
-
-void CmdLine::setOption(list<string> option) {
-	this->option = option;
-}
-
-void CmdLine::setArg(list<string> arg) {
-	this->arg = arg;
-}
-
-/**
- * methode of add option or argument to the cmd
- */
-
-void CmdLine::addOption(string option) {
-	this->option.push_back(option);
-}
-
-void CmdLine::addArg(string arg) {
-	this->arg.push_back(arg);
-}
-
-/*
- * operator
- */
-
-CmdLine& CmdLine::operator=(const CmdLine others) {
+CmdLine& CmdLine::operator=(const CmdLine others)
+{
 	this->cmd = others.cmd;
-	this->arg = others.arg;
-	this->option = others.option;
+	this->options = others.options;
 	return *this;
 }
 
-std::ostream& operator<<(ostream& os, const CmdLine& cmd) {
-
-	//list<string>::iterator it;
-
-	switch (cmd.cmd) {
-	case CmdLine::GET:
-		os << "GET";
-		break;
-	case CmdLine::PUT:
-		os << "PUT";
-		break;
-	case CmdLine::QUIT:
-		os << "QUIT";
-		break;
-	default:
-		os << "ERR";
-		break;
+std::ostream& operator<<(ostream& os, const CmdLine& cmd)
+{
+	switch (cmd.cmd)
+	{
+		case CmdLine::GET:
+			os << "GET";
+			break;
+		case CmdLine::PUT:
+			os << "PUT";
+			break;
+		case CmdLine::QUIT:
+			os << "QUIT";
+			break;
+		default:
+			os << "ERR";
+			break;
 	}
 
-	list<string>::iterator it;
-	list < string > list = cmd.option;
-
-	if (!cmd.option.empty()) {
-		for (it = list.begin(); it != list.end(); ++it)
-			os << " -" << *it;
-	}
-
-	list = cmd.arg;
-	if (!cmd.arg.empty()) {
-		for (it = list.begin(); it != list.end(); it++)
-			os << ' ' << *it;
-	}
 	os << endl;
 
 	return os;

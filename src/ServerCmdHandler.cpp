@@ -46,9 +46,8 @@ int ServerCmdHandler::exec(int port)
 {
 	if(this->cmd != NULL)
 	{
-		list<string> arg = this->cmd->getArg();
-		list<string> opt = this->cmd->getOption();
-		list<string>::iterator it;
+		vector<CmdOption> opt;
+		vector<string>::iterator it;
 
 		//SendFile *send;
 
