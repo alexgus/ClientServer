@@ -117,6 +117,7 @@ void Server::run(int fd)
 		this->mt_contRun.unlock();
 		if((str = &(c->readString())) != NULL)
 		{
+			log.write(string("Server [RECV] : ") + *str, typeid(*this).name(), Log::DBG);
 			ServerCmdHandler *cmdHandler = new ServerCmdHandler(*str);
 
 			switch(cmdHandler->exec(fd))
