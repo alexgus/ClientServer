@@ -20,7 +20,7 @@
 #include <cerrno>
 #include <typeinfo>
 #include <string>
-#include <list>
+#include <vector>
 #include <thread>
 #include <mutex>
 
@@ -29,6 +29,40 @@
 #include "ServerCmdHandler.h"
 
 using namespace std;
+
+/**
+ * Client data
+ */
+typedef struct
+{
+	/**
+	 * For stocking address' and port's client
+	 *
+	 * addrClient.sa_data[0] + addrClient.sa_data[1] = PORT client
+	 * addrClient.sa_data[5].addrClient.sa_data[4].addrClient.sa_data[3].addrClient.sa_data[2] = IP Client
+	 */
+	sockaddr *addrClient;
+
+	/**
+	 * File descriptor for writing to and reading from the client
+	 */
+	int fd;
+
+	/**
+	 * Client's server thread
+	 */
+	thread *t;
+
+	/**
+	 * Boolean for the main loop of the client
+	 */
+	bool run;
+
+	/**
+	 * Mutex for protecting the boolean run
+	 */
+	mutex *mRun;
+} clientData;
 
 /**
  * Class Server
@@ -71,16 +105,15 @@ private:
 	struct sockaddr_in addr;
 
 	/**
+	 * List of clientData
+	 */
+	vector<clientData*> *lClient;
+
+	/**
 	 * While this value is true, the server will wait for new connection.
 	 * Protected by mutex.
 	 */
 	bool waitAccept = true;
-
-	/**
-	 * Continue to talk with a client.
-	 * Protected by mutex.
-	 */
-	bool contRun = true;
 
 	/**
 	 * Mutex for protecting waitAccept
@@ -88,21 +121,16 @@ private:
 	mutex mt_waitAccept;
 
 	/**
-	 * Mutex for protecting contRun
-	 */
-	mutex mt_contRun;
-
-	/**
 	 * Parse informations sent by the client to this socket.
 	 * @param fd File descriptor for communication (socket)
 	 */
-	void run(int fd);
+	void run(clientData *d);
 
 	/**
 	 * Stop the communication with the client.
 	 * Change properly the state of contRun.
 	 */
-	void stopRun();
+	void stopRun(clientData *d);
 
 public:
 	/**

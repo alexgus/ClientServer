@@ -11,6 +11,8 @@ Server::Server()
 {
 	log.write("Initialize Server",typeid(*this).name(),Log::DBG);
 
+	this->lClient = new vector<clientData*>();
+
 	// Create the socket
 	fd_sock = socket(AF_INET, SOCK_STREAM, 0);
 	if(fd_sock == -1)
@@ -35,6 +37,7 @@ Server::~Server()
 {
 	if(fd_sock != -1)
 		close(fd_sock);
+	delete this->lClient;
 }
 
 
@@ -46,14 +49,10 @@ void Server::acceptConnection()
 	fd_set read;
 	timeval timeoutAccept;
 
-	/*
-	 * addrClient.sa_data[0] + addrClient.sa_data[1] = PORT client
-	 * addrClient.sa_data[5].addrClient.sa_data[4].addrClient.sa_data[3].addrClient.sa_data[2] = IP Client
-	 */
 	sockaddr *addrClient;
 	socklen_t lenAddrClient = sizeof(sockaddr);;
-	list<thread> lClient;
-	list<sockaddr> lAddr;
+
+	clientData *data;
 
 // Begin
 	// If no socket
@@ -89,42 +88,50 @@ void Server::acceptConnection()
 
 			log.write("Server accepted connection",typeid(*this).name(),Log::DBG);
 
-			lAddr.push_back(*addrClient);
-			lClient.push_back(thread(&Server::run,this,fd));
+			// Stocking client address
+			data = (clientData *)malloc(sizeof(clientData));
+			data->addrClient = addrClient;
+			data->fd = fd;
+			data->mRun = new mutex();
+			data->run = true;
+			data->t = new thread(&Server::run,this,data);
+			this->lClient->push_back(data);
 		}
 	}
 
-	this->stopRun();
-	// Delete all run instance
-	for(list<thread>::iterator it=lClient.begin();it != lClient.end();++it)
-		it->join();
+	// Delete all running instance
+	for(vector<clientData*>::iterator it = this->lClient->begin(); it != this->lClient->end();++it)
+	{
+		this->stopRun(*it);
+		(*it)->t->join();
+	}
 
 	// TODO Free lAddr
 }
 
-void Server::run(int fd)
+void Server::run(clientData *d)
 {
 	// If fd isn't file descriptor
-	if(fd < 0)
+	if(d->fd < 0)
 		return;
 
-	Com *c = new Com(fd,{timeoutS,timeoutM});
+	Com *c = new Com(d->fd,{timeoutS,timeoutM});
 	string *str;
 
-	this->mt_contRun.lock();
-	while(this->contRun)
+	d->mRun->lock();
+	while(d->run)
 	{
-		this->mt_contRun.unlock();
+		d->mRun->unlock();
 		str = &(c->readString());
 		if(*str != "")
 		{
 			log.write(string("Server [RECV] : ") + *str, typeid(*this).name(), Log::DBG);
 			ServerCmdHandler *cmdHandler = new ServerCmdHandler(*str);
 
-			switch(cmdHandler->exec(fd))
+			switch(cmdHandler->exec(d->fd))
 			{
 				case 0: // QUIT
-					this->stopRun();
+					this->stopRun(d);
 					c->writeString("Bye !");
 					log.write("Server finished",typeid(*this).name(),Log::DBG);
 					return;
@@ -142,7 +149,7 @@ void Server::run(int fd)
 	}
 
 	// Close the file descriptor
-	close(fd);
+	close(d->fd);
 }
 
 void Server::stopServer()
@@ -152,9 +159,9 @@ void Server::stopServer()
 	this->mt_waitAccept.unlock();
 }
 
-void Server::stopRun()
+void Server::stopRun(clientData *d)
 {
-	this->mt_contRun.lock();
-	this->contRun = false;
-	this->mt_contRun.unlock();
+	d->mRun->lock();
+	d->run = false;
+	d->mRun->unlock();
 }
