@@ -47,6 +47,9 @@ void Log::write(string s, string callClass, LEVEL l)
 		case ERR:
 			file << setw(SETW_LEVEL) << "[ERR]";
 			break;
+		case INFO:
+			file << setw(SETW_LEVEL) << "[INFO]";
+			break;
 	}
 #ifndef DEBUG
 	if(l != LEVEL.DBG))

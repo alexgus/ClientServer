@@ -43,7 +43,7 @@ public:
 	/**
 	 * Log's level
 	 */
-	enum LEVEL { DBG, WARN, ERR };
+	enum LEVEL { DBG = 0, WARN, ERR, INFO };
 
 	/**
 	 * Class' constructor
