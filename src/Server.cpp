@@ -104,6 +104,7 @@ void Server::acceptConnection()
 	{
 		this->stopRun(*it);
 		(*it)->t->join();
+		free(*it);
 	}
 
 	// TODO Free lAddr
@@ -115,6 +116,10 @@ void Server::run(clientData *d)
 	if(d->fd < 0)
 		return;
 
+	char *ipPort = (char*) malloc(sizeof(char)*24);
+	snprintf(ipPort,24, "%hd.%hd.%hd.%hd:%d", d->addrClient->sa_data[2], d->addrClient->sa_data[3], d->addrClient->sa_data[4], d->addrClient->sa_data[5],
+			(d->addrClient->sa_data[0] + d->addrClient->sa_data[1]));
+
 	Com *c = new Com(d->fd,{timeoutS,timeoutM});
 	string *str;
 
@@ -125,7 +130,7 @@ void Server::run(clientData *d)
 		str = &(c->readString());
 		if(*str != "")
 		{
-			log.write(string("Server [RECV] : ") + *str, typeid(*this).name(), Log::DBG);
+			log.write("Server ["+ string(ipPort) + "][RECV] : " + *str, typeid(*this).name(), Log::DBG);
 			ServerCmdHandler *cmdHandler = new ServerCmdHandler(*str);
 
 			switch(cmdHandler->exec(d->fd))
@@ -147,6 +152,8 @@ void Server::run(clientData *d)
 			delete cmdHandler;
 		}
 	}
+
+	free(ipPort);
 
 	// Close the file descriptor
 	close(d->fd);
