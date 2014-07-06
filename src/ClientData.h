@@ -10,9 +10,12 @@
 
 #include <netinet/in.h>
 #include <unistd.h>
+#include <math.h>
+
 
 #include <thread>
 #include <mutex>
+#include <iostream>
 
 using namespace std;
 
@@ -71,13 +74,13 @@ public:
 	 * Get the client IP
 	 * @return The client IP
 	 */
-	string& getIp();
+	string* getIp();
 
 	/**
 	 * Get the client port
 	 * @return The client port
 	 */
-	string& getPort();
+	string* getPort();
 
 	/**
 	 * Get the file descriptor for talking with the client

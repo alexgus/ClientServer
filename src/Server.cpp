@@ -121,7 +121,7 @@ void Server::run(ClientData *d)
 		str = &(c->readString());
 		if(*str != "")
 		{
-			log.write("Server ["+ d->getIp() + ":" + d->getPort() + "][RECV] : " + *str, typeid(*this).name(), Log::DBG);
+			log.write("Server ["+ *d->getIp() + ":" + *d->getPort() + "][RECV] : " + *str, typeid(*this).name(), Log::DBG);
 			ServerCmdHandler *cmdHandler = new ServerCmdHandler(*str);
 
 			switch(cmdHandler->exec(d->getFd()))
