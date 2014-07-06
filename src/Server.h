@@ -27,42 +27,9 @@
 #include "Log.h"
 #include "Com.h"
 #include "ServerCmdHandler.h"
+#include "ClientData.h"
 
 using namespace std;
-
-/**
- * Client data
- */
-typedef struct
-{
-	/**
-	 * For stocking address' and port's client
-	 *
-	 * addrClient.sa_data[0] + addrClient.sa_data[1] = PORT client
-	 * addrClient.sa_data[5].addrClient.sa_data[4].addrClient.sa_data[3].addrClient.sa_data[2] = IP Client
-	 */
-	sockaddr *addrClient;
-
-	/**
-	 * File descriptor for writing to and reading from the client
-	 */
-	int fd;
-
-	/**
-	 * Client's server thread
-	 */
-	thread *t;
-
-	/**
-	 * Boolean for the main loop of the client
-	 */
-	bool run;
-
-	/**
-	 * Mutex for protecting the boolean run
-	 */
-	mutex *mRun;
-} clientData;
 
 /**
  * Class Server
@@ -107,7 +74,7 @@ private:
 	/**
 	 * List of clientData
 	 */
-	vector<clientData*> *lClient;
+	vector<ClientData*> *lClient;
 
 	/**
 	 * While this value is true, the server will wait for new connection.
@@ -124,13 +91,7 @@ private:
 	 * Parse informations sent by the client to this socket.
 	 * @param fd File descriptor for communication (socket)
 	 */
-	void run(clientData *d);
-
-	/**
-	 * Stop the communication with the client.
-	 * Change properly the state of contRun.
-	 */
-	void stopRun(clientData *d);
+	void run(ClientData *d);
 
 public:
 	/**
