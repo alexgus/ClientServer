@@ -18,7 +18,7 @@ string* convUByteToString(uint16_t ubyte)
 }
 
 
-ClientData::ClientData(sockaddr* s, int fd)
+ClientData::ClientData(sockaddr* s, int fd, struct statvfs *fs)
 {
 	this->t = 0;
 	this->addrClient = s;
@@ -37,6 +37,12 @@ ClientData::ClientData(sockaddr* s, int fd)
 	// Stock port
 	unsigned short port = (this->addrClient->sa_data[0] << 8) | this->addrClient->sa_data[1];
 	this->port = new string(*convUByteToString(port));
+
+	// Filesystem statistic
+	this->statfs = fs;
+
+	this->disk_size = fs->f_frsize * fs->f_blocks;
+	this->disk_free = fs->f_frsize * fs->f_bfree;
 }
 
 ClientData::~ClientData()

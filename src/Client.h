@@ -22,14 +22,15 @@
 #include <string>
 #include <netdb.h>
 #include <stdlib.h>
+#include <sys/statvfs.h>
 #include "Log.h"
 #include "Com.h"
-using namespace std;
 
+using namespace std;
 
 //Target host details:
 #define PORT  2371
-#define HOST "192.168.1.20"
+#define HOST "127.0.0.1"
 
 class Client
 {

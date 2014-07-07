@@ -53,6 +53,16 @@ int Client::connection()
 		return -1;
 	}
 
+	// TODO server ask for information
+
+	// TODO change dir
+	struct statvfs *fs = (struct statvfs*) malloc(sizeof(struct statvfs));
+	statvfs(".",fs);
+	send(fd_sock,fs,sizeof(struct statvfs),0);
+
+	// Raspberry or x86
+	// MDP
+
 	return status;
 }
 void Client::run()

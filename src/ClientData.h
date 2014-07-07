@@ -11,6 +11,7 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <math.h>
+#include <sys/statvfs.h>
 
 #include <thread>
 #include <mutex>
@@ -62,12 +63,27 @@ private:
 	 */
 	mutex *mRun;
 
+	/**
+	 * Filesystem statistic
+	 */
+	struct statvfs *statfs;
+
+	/**
+	 * Total disk space
+	 */
+	unsigned long disk_size;
+
+	/**
+	 * Free space on disk
+	 */
+	unsigned long disk_free;
+
 public:
 
 	/**
 	 * Default constructor. Construct a client with all needed information
 	 */
-	ClientData(sockaddr* s, int fd);
+	ClientData(sockaddr* s, int fd, struct statvfs *fs);
 
 	/**
 	 * Default destroyer

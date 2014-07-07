@@ -17,6 +17,8 @@
 #include <time.h>
 #include <string.h>
 
+#include <sys/statvfs.h>
+
 #include <cerrno>
 #include <typeinfo>
 #include <string>

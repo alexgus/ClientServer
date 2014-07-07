@@ -72,12 +72,14 @@ void Server::acceptConnection()
 		FD_ZERO(&read);
 		FD_SET(fd_sock, &read);
 
+		// Not wait on accept
 		if((ret_select = select(fd_sock+1,&read,NULL,NULL,&timeoutAccept)) < 0)
 		{
 			log.write("Select accept error : " + string(strerror(errno)),typeid(*this).name(),Log::ERR);
 			return;
 		}
 
+		// If there's an activity on the listen socket
 		if(ret_select > 0)
 		{
 			addrClient = (sockaddr*) malloc(lenAddrClient);
@@ -85,11 +87,15 @@ void Server::acceptConnection()
 
 			if(fd < 0)
 				log.write("Accept error : " + string(strerror(errno)),typeid(*this).name(),Log::ERR);
-
 			log.write("Server accepted connection",typeid(*this).name(),Log::DBG);
 
-			// Stocking client address
-			data = new ClientData(addrClient, fd);
+			// Get informations about client on fd
+			Com *c = new Com(fd,{timeoutS,timeoutM});
+
+			struct statvfs *fs = (struct statvfs*) c->readBlob(sizeof(struct statvfs));
+
+			// Stocking client info
+			data = new ClientData(addrClient, fd, fs); // TODO ask for data
 			data->setThread(new thread(&Server::run,this,data));
 			this->lClient->push_back(data);
 		}
