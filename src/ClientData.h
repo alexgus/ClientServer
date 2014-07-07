@@ -33,6 +33,16 @@ private:
 	sockaddr *addrClient;
 
 	/**
+	 * String Ip address
+	 */
+	string *ip;
+
+	/**
+	 * String port address
+	 */
+	string *port;
+
+	/**
 	 * File descriptor for writing to and reading from the client
 	 */
 	int fd;
@@ -68,18 +78,6 @@ public:
 	 * Stop the client thread
 	 */
 	void stopClient();
-
-	/**
-	 * Get the client IP
-	 * @return The client IP
-	 */
-	string* getIp();
-
-	/**
-	 * Get the client port
-	 * @return The client port
-	 */
-	string* getPort();
 
 	/**
 	 * Get the file descriptor for talking with the client
@@ -131,6 +129,16 @@ public:
 	void unlockRun()
 	{
 		this->mRun->unlock();
+	}
+
+	string* getIp() const
+	{
+		return ip;
+	}
+
+	string* getPort() const
+	{
+		return port;
 	}
 };
 
