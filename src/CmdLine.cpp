@@ -33,7 +33,10 @@ CmdLine::CmdLine(string commande)
 	string str;
 	auto it = commande.cbegin();
 	//
-	while ((*it != ' ') && (it != commande.cend()))
+	while ((it != commande.cend()) && (*it != ' '
+			&& *it != '\n'
+			&& *it != '\r'
+			&& *it != '\0'))
 	{
 		str = str + *it;
 		it++;

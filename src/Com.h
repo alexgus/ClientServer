@@ -52,7 +52,7 @@ public:
 	 * Read a string from the fd
 	 * @return The string read
 	 */
-	string& readString();
+	string* readString();
 
 	/**
 	 * Read byte on the file descriptor

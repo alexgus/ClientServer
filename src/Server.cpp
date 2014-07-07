@@ -123,7 +123,7 @@ void Server::run(ClientData *d)
 	while(d->isRunning())
 	{
 		d->unlockRun();
-		str = &(c->readString());
+		str = c->readString();
 		if(*str != "")
 		{
 			log.write("Server ["+ *d->getIp() + ":" + *d->getPort() + "][RECV] : " + *str, typeid(*this).name(), Log::DBG);

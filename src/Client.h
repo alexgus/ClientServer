@@ -44,6 +44,11 @@ private :
 	Log log;
 
 	/**
+	 * If the client is running
+	 */
+	bool running;
+
+	/**
 	 * The socket file descriptor
 	 */
 	int fd_sock;
@@ -52,11 +57,6 @@ private :
 	 * The client's address
 	 */
 	struct sockaddr_in addr;
-
-	/**
-	 * The status of the connection
-	 */
-	int status;
 
 	/**
 	 * The struct that getaddrinfo() fills up with data.
@@ -69,9 +69,14 @@ private :
 	struct addrinfo *host_info_list;
 
 	/**
-	 * The initialization method
+	 * Communication set of method for the user
 	 */
-	void init();
+	Com *cUser;
+
+	/**
+	 * Communication set of method for the socket (server)
+	 */
+	Com *cSocket;
 
 	/**
 	 * Connect to the host
@@ -84,13 +89,13 @@ private :
 	 * @param cmd The command to send
 	 * @return -1 if failed 0 otherwise
 	 */
-	int sendCmd(string cmd);
+	int sendCmd(string* cmd);
 
 	/**
 	 * Receive informations from the server
 	 * @return The string that server sent
 	 */
-	string receive();
+	string* receive();
 
 public :
 

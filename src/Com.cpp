@@ -29,7 +29,7 @@ void Com::writeString(const string &s)
 	write(fd,s.c_str(),(unsigned int)s.size());
 }
 
-string& Com::readString()
+string* Com::readString()
 {
 	timeval t = this->timeout;
 	int ret_select;
@@ -46,7 +46,7 @@ string& Com::readString()
 	if((ret_select = select(fd+1,&readSet,NULL,NULL,&t)) < 0)
 	{
 		log.write("Select read error : " + string(strerror(errno)),typeid(*this).name(),Log::ERR);
-		return *str;
+		return str;
 	}
 
 	// the state of fd changed
@@ -57,10 +57,10 @@ string& Com::readString()
 		buf[nbRead] = '\0'; // Add end of string
 
 		str = new string(buf);
-		return *str;
+		return str;
 	}
 
-	return *str;
+	return str;
 }
 
 char* Com::readBlob(int size)

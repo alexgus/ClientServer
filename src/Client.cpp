@@ -9,19 +9,39 @@
 
 Client::Client()
 {
-	init();
+	this->running = false;
+	this->cUser = new Com(fileno(stdin),{2,0});
+	this->cSocket = 0;
+	fd_sock = -1;
+
+	host_info_list = 0;
+	host_info.ai_family = AF_UNSPEC;     // IP version not specified. Can be both.
+	host_info.ai_socktype = SOCK_STREAM; // Use SOCK_STREAM for TCP or SOCK_DGRAM for UDP.
 }
 
 Client::Client(string address, int port)
 {
-	init();
+	this->running = false;
+	fd_sock = -1;
+	this->cUser = new Com(fileno(stdin),{2,0});
+	this->cSocket = 0;
+
+	host_info.ai_family = AF_UNSPEC;     // IP version not specified. Can be both.
+	host_info.ai_socktype = SOCK_STREAM; // Use SOCK_STREAM for TCP or SOCK_DGRAM for UDP.
 	initHostInfo(address, port);
 }
+
+Client::~Client()
+{
+	delete this->cSocket;
+	delete this->cUser;
+}
+
 
 int Client::initHostInfo(string address, int port)
 {
 	char const * p = to_string(port).c_str();
-	status = getaddrinfo(address.c_str() , p, &host_info, &host_info_list);
+	int status = getaddrinfo(address.c_str() , p, &host_info, &host_info_list);
 	if(status != 0)
 	{
 		log.write("Client : Failed to get Hosts Info",typeid(*this).name(),Log::WARN);
@@ -45,13 +65,15 @@ int Client::connection()
 		return -1;
 	}
 
-	status = connect(fd_sock, host_info_list->ai_addr, host_info_list->ai_addrlen);
+	int status = connect(fd_sock, host_info_list->ai_addr, host_info_list->ai_addrlen);
 
 	if (status == -1)
 	{
 		log.write("Client : Failed to connect to Host",typeid(*this).name(),Log::ERR);
 		return -1;
 	}
+
+	this->cSocket = new Com(this->fd_sock,{2,0});
 
 	// TODO server ask for information
 
@@ -60,30 +82,39 @@ int Client::connection()
 	statvfs(".",fs);
 	send(fd_sock,fs,sizeof(struct statvfs),0);
 
-	// Raspberry or x86
+	// arm or x86 ?
 	// MDP
+
+	free(fs);
 
 	return status;
 }
 void Client::run()
 {
-	string msg, rcv;
+	string *msg=0, *rcv=0;
+
+	// Connect to the server
 	connection();
 
-	while(1)
+	this->running = true;
+
+	while(this->running)
 	{
 		cout << "Client : type a command to send"<<endl;
-		getline(cin,msg);
 
-		if(msg.length() >= 3)
+		msg = this->cUser->readString();
+		while(*msg == "")
+			msg = this->cUser->readString();
+
+		if(msg->length() >= 3)
 		{
-			sendCmd(msg);
+			this->cSocket->writeString(*msg);
 
 			cout<<"Client : waiting for an answer .."<<endl;
-			rcv = receive();
-			cout<<"Client [RCV] : "<<rcv<<endl;
+			rcv = this->cSocket->readString();
+			cout << "Client [RCV] : "<< *rcv <<endl;
 
-			if(rcv == "Bye !")
+			if(*rcv == "Bye !")
 			{
 				cout<<"Client exiting -- Closing socket"<<endl;
 				close(fd_sock);
@@ -93,11 +124,11 @@ void Client::run()
 	}
 }
 
-int Client::sendCmd(string cmd)
+int Client::sendCmd(string* cmd)
 {
-	log.write("Client [SEND] : "+cmd,typeid(*this).name(),Log::DBG);
+	log.write("Client [SEND] : "+*cmd,typeid(*this).name(),Log::DBG);
 
-	if(send(fd_sock,cmd.c_str(),cmd.length(),0)==-1)
+	if(send(fd_sock,cmd->c_str(),cmd->length(),0)==-1)
 	{
 		log.write("Client : Error when sending message",typeid(*this).name(),Log::ERR);
 		return -1;
@@ -106,34 +137,19 @@ int Client::sendCmd(string cmd)
 	return 0;
 }
 
-string Client::receive()
+string* Client::receive()
 {
-	char buff[256] = "";
+	char buff[BUFFER_SIZE] = "";
 	int size;
 
-	if((size=recv(fd_sock,buff,256,0))==-1)
+	if((size=recv(fd_sock,buff,BUFFER_SIZE,0))==-1)
 	{
 		log.write("Client : Error when receiving message",typeid(*this).name(),Log::ERR);
-		return "";
+		return new string("");
 	}
 
 	buff[size]='\0';
 	log.write("Client [RECV] : "+(string)buff,typeid(*this).name(),Log::DBG);
 
-	return string(buff);
-}
-void Client::init()
-{
-	fd_sock = -1;
-	status = -1;
-
-	memset(&host_info, 0, sizeof host_info);
-
-	host_info.ai_family = AF_UNSPEC;     // IP version not specified. Can be both.
-	host_info.ai_socktype = SOCK_STREAM; // Use SOCK_STREAM for TCP or SOCK_DGRAM for UDP.
-}
-
-Client::~Client()
-{
-
+	return new string(buff);
 }
