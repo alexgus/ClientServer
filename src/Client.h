@@ -8,21 +8,23 @@
 #ifndef CLIENT_H_
 #define CLIENT_H_
 
-
+#include <unistd.h>
+#include <string.h>
+#include <errno.h>
+#include <stdlib.h>
 
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <netinet/in.h>
-#include <unistd.h>
-#include <string.h>
-#include <errno.h>
+#include <netdb.h>
+
+#include <sys/statvfs.h>
+
 #include <typeinfo>
 #include <cstring>
 #include <iostream>
 #include <string>
-#include <netdb.h>
-#include <stdlib.h>
-#include <sys/statvfs.h>
+
 #include "Log.h"
 #include "Com.h"
 
@@ -36,23 +38,90 @@ class Client
 {
 private :
 
+	/**
+	 * For logging event
+	 */
 	Log log;
+
+	/**
+	 * The socket file descriptor
+	 */
 	int fd_sock;
+
+	/**
+	 * The client's address
+	 */
 	struct sockaddr_in addr;
+
+	/**
+	 * The status of the connection
+	 */
 	int status;
-	struct addrinfo host_info;       // The struct that getaddrinfo() fills up with data.
-	struct addrinfo *host_info_list; // Pointer to the to the linked list of host_info's.
+
+	/**
+	 * The struct that getaddrinfo() fills up with data.
+	 */
+	struct addrinfo host_info;
+
+	/**
+	 * Pointer to the to the linked list of host_info's.
+	 */
+	struct addrinfo *host_info_list;
+
+	/**
+	 * The initialization method
+	 */
 	void init();
+
+	/**
+	 * Connect to the host
+	 * @return The status of the connection
+	 */
 	int connection();
+
+	/**
+	 * Send a command to the server
+	 * @param cmd The command to send
+	 * @return -1 if failed 0 otherwise
+	 */
 	int sendCmd(string cmd);
+
+	/**
+	 * Receive informations from the server
+	 * @return The string that server sent
+	 */
 	string receive();
+
 public :
 
+	/**
+	 * Default constructor
+	 */
 	Client();
+
+	/**
+	 * Constructor defines address and port to connect
+	 * @param address The address to connect
+	 * @param port The port to connect
+	 */
 	Client(string address, int port);
+
+	/**
+	 * Default destroyer
+	 */
 	virtual ~Client();
 
+	/**
+	 * Initialize the connection
+	 * @param address The address to connect
+	 * @param port The port to connect
+	 * @return The status of the host
+	 */
 	int initHostInfo(string address, int port);
+
+	/**
+	 * Run the client
+	 */
 	void run();
 };
 
