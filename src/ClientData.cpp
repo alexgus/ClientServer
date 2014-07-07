@@ -31,20 +31,12 @@ void ClientData::stopClient()
 	this->mRun->unlock();
 }
 
-string* convUByteToString(unsigned short ubyte, int nbByte = 1)
+string* convUByteToString(uint16_t ubyte)
 {
+	// TODO Verify indianness
 	char *buf = (char*) malloc(sizeof(char)*4);
-	unsigned short nb = 0;
 
-	for(int i = (7 * nbByte) + (nbByte - 1); i >= 0; --i)
-	{
-		//--- Get the ieme bit
-		unsigned short w = (ubyte >> i) & 0b00000001;
-
-		nb += w * pow(2,i);
-	}
-
-	sprintf(buf, "%hu", nb);
+	sprintf(buf, "%hu", ubyte);
 
 	return new string(buf);
 }
@@ -67,6 +59,6 @@ string* ClientData::getIp()
 string* ClientData::getPort()
 {
 	unsigned short port = (this->addrClient->sa_data[0] << 8) | this->addrClient->sa_data[1];
-	string *res = new string(*convUByteToString(port,2));
+	string *res = new string(*convUByteToString(port));
 	return res;
 }
