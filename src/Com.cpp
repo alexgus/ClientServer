@@ -63,3 +63,28 @@ string& Com::readString()
 	return *str;
 }
 
+char* Com::readBlob(int size)
+{
+	char *buf = (char*) malloc(sizeof(char)*size);
+	timeval t = this->timeout;
+	int ret_select;
+	fd_set readSet;
+
+	ret_select = 0;
+	FD_ZERO(&readSet);
+	FD_SET(fd, &readSet);
+
+	if((ret_select = select(fd+1,&readSet,NULL,NULL,&t)) < 0)
+	{
+		log.write("Select read error : " + string(strerror(errno)),typeid(*this).name(),Log::ERR);
+		return 0;
+	}
+
+	// the state of fd changed
+	if(ret_select > 0)
+	{
+		read(fd, buf, size);
+		return buf;
+	}
+	return 0;
+}
