@@ -29,8 +29,6 @@ void ClientData::stopClient()
 	this->mRun->lock();
 	this->run = false;
 	this->mRun->unlock();
-
-	this->t->join();
 }
 
 string* convUByteToString(unsigned short ubyte, int nbByte = 1)

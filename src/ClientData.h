@@ -12,7 +12,6 @@
 #include <unistd.h>
 #include <math.h>
 
-
 #include <thread>
 #include <mutex>
 #include <iostream>
@@ -104,7 +103,7 @@ public:
 	 * Get the thread of the client
 	 * @return The client's thread
 	 */
-	const thread* getThread() const
+	thread* getThread() const
 	{
 		return t;
 	}

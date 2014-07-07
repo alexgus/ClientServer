@@ -99,10 +99,9 @@ void Server::acceptConnection()
 	for(vector<ClientData*>::iterator it = this->lClient->begin(); it != this->lClient->end();++it)
 	{
 		(*it)->stopClient();
+		(*it)->getThread()->join();
 		delete *it;
 	}
-
-	// TODO Free lAddr
 }
 
 void Server::run(ClientData *d)
@@ -128,9 +127,6 @@ void Server::run(ClientData *d)
 			{
 				case 0: // QUIT
 					d->stopClient();
-					c->writeString("Bye !");
-					log.write("Server finished",typeid(*this).name(),Log::DBG);
-					return;
 					break;
 				case 1:
 					c->writeString("OK : " + *str);
@@ -143,6 +139,8 @@ void Server::run(ClientData *d)
 			delete cmdHandler;
 		}
 	}
+	c->writeString("Bye !");
+	log.write("Server finished",typeid(*this).name(),Log::DBG);
 }
 
 void Server::stopServer()
