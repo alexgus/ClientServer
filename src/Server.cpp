@@ -127,26 +127,32 @@ void Server::run(ClientData *d)
 		if(*str != "")
 		{
 			log.write("Server ["+ *d->getIp() + ":" + *d->getPort() + "][RECV] : " + *str, typeid(*this).name(), Log::DBG);
-			ServerCmdHandler *cmdHandler = new ServerCmdHandler(*str);
-
-			switch(cmdHandler->exec(d->getFd()))
-			{
-				case 0: // QUIT
-					d->stopClient();
-					break;
-				case 1:
-					c->writeString("OK : " + *str);
-					break;
-				case -1:
-					c->writeString("Command not recognized : " + *str);
-					break;
-			}
-
-			delete cmdHandler;
+			thread t(&Server::handleString,this,d,c,str);
+			t.detach();
 		}
 	}
 	c->writeString("Bye !");
 	log.write("Server finished",typeid(*this).name(),Log::DBG);
+}
+
+void Server::handleString(ClientData *d, Com *c, string* s)
+{
+	ServerCmdHandler *cmdHandler = new ServerCmdHandler(*s);
+
+	switch(cmdHandler->exec(d->getFd()))
+	{
+		case 0: // QUIT
+			d->stopClient();
+			break;
+		case 1:
+			c->writeString("OK : " + *s);
+			break;
+		case -1:
+			c->writeString("Command not recognized : " + *s);
+			break;
+	}
+
+	delete cmdHandler;
 }
 
 void Server::stopServer()

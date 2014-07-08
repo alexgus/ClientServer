@@ -95,6 +95,14 @@ private:
 	 */
 	void run(ClientData *d);
 
+	/**
+	 * Allow to handle the command string
+	 * @param d The clientdata object who send the string
+	 * @param c The communication object who received the string
+	 * @param s The command string to handle
+	 */
+	void handleString(ClientData *d, Com *c, string *s);
+
 public:
 	/**
 	 * Constructor of the class.
