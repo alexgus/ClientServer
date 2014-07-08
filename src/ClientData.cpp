@@ -18,7 +18,7 @@ string* convUByteToString(uint16_t ubyte)
 }
 
 
-ClientData::ClientData(sockaddr* s, int fd, struct statvfs *fs)
+ClientData::ClientData(sockaddr* s, int fd, struct statvfs *fs, string *arch)
 {
 	this->t = 0;
 	this->addrClient = s;
@@ -43,6 +43,9 @@ ClientData::ClientData(sockaddr* s, int fd, struct statvfs *fs)
 
 	this->disk_size = fs->f_frsize * fs->f_blocks;
 	this->disk_free = fs->f_frsize * fs->f_bfree;
+
+	// Arch
+	this->arch = arch;
 }
 
 ClientData::~ClientData()

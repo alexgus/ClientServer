@@ -78,12 +78,17 @@ private:
 	 */
 	unsigned long disk_free;
 
+	/**
+	 * String to defines the arch
+	 */
+	string *arch;
+
 public:
 
 	/**
 	 * Default constructor. Construct a client with all needed information
 	 */
-	ClientData(sockaddr* s, int fd, struct statvfs *fs);
+	ClientData(sockaddr* s, int fd, struct statvfs *fs, string *arch);
 
 	/**
 	 * Default destroyer

@@ -91,11 +91,11 @@ void Server::acceptConnection()
 
 			// Get informations about client on fd
 			Com *c = new Com(fd,{timeoutS,timeoutM});
-
 			struct statvfs *fs = (struct statvfs*) c->readBlob(sizeof(struct statvfs));
+			string *arch = c->readString();
 
 			// Stocking client info
-			data = new ClientData(addrClient, fd, fs); // TODO ask for data
+			data = new ClientData(addrClient, fd, fs, arch); // TODO ask for data
 			data->setThread(new thread(&Server::run,this,data));
 			this->lClient->push_back(data);
 		}

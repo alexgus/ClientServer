@@ -80,10 +80,11 @@ int Client::connection()
 	// TODO change dir
 	struct statvfs *fs = (struct statvfs*) malloc(sizeof(struct statvfs));
 	statvfs(".",fs);
-	send(fd_sock,fs,sizeof(struct statvfs),0);
+	this->cSocket->writeBlob(fs,sizeof(struct statvfs));
 
 	// arm or x86 ?
-	cout << *this->getArch() <<endl;
+	string *arch = this->getArch();
+	this->cSocket->writeString(*arch);
 	// MDP
 
 	free(fs);
