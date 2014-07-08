@@ -63,7 +63,7 @@ string* Com::readString()
 	return str;
 }
 
-void Com::writeBlob(char* buf, int size)
+void Com::writeBlob(void* buf, int size)
 {
 	write(this->fd,buf,size);
 }
