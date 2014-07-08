@@ -70,8 +70,6 @@ void SendFile::send()
 
 		// Write the buffer on socket
 		this->com->writeString(string(buf));
-		log << "Sent : " + string(buf);
 	}
-	cout << "-----------------------finish" << endl;
 	log.write("Finished transferring data",typeid(*this).name(),Log::DBG);
 }
