@@ -83,12 +83,50 @@ int Client::connection()
 	send(fd_sock,fs,sizeof(struct statvfs),0);
 
 	// arm or x86 ?
+	cout << *this->getArch() <<endl;
 	// MDP
 
 	free(fs);
 
 	return status;
 }
+
+string* Client::getArch()
+{
+	int fd[2];
+	int status;
+
+	status = pipe(fd);
+	if(status == -1)
+	{
+		log.write("Problem when creating pipe for getting Architecture", typeid(*this).name(),Log::DBG);
+		return new string("");
+	}
+
+	switch(fork())
+	{
+		case -1:
+			log.write("Problem fork for getting Architecture", typeid(*this).name(),Log::DBG);
+			return new string("");
+			break;
+		case 0: // Child
+			close(fd[0]);
+			dup2(fd[1],fileno(stdout));
+			execlp("uname","uname","-m",0);
+			break;
+		default: // Parent
+			close(fd[1]);
+			Com *c = new Com(fd[0],{10,0});
+			string *s =  c->readString();
+			s->erase(s->end()-1); // Delete \n
+			delete c;
+			close(fd[0]);
+			return s;
+			break;
+	}
+	return new string("");
+}
+
 void Client::run()
 {
 	string *msg=0, *rcv=0;

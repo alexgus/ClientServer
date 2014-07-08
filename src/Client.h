@@ -84,6 +84,11 @@ private :
 	 */
 	int connection();
 
+	/**
+	 * Get the client architecture
+	 */
+	string* getArch();
+
 public :
 
 	/**
