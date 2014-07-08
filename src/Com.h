@@ -68,6 +68,15 @@ public:
 	 */
 	char* readBlob(int size = BUFFER_SIZE);
 
+	/**
+	 * Get the file descriptor associate with this object
+	 * @return The file descriptor
+	 */
+	int getFd() const
+	{
+		return fd;
+	}
+
 private:
 	/**
 	 * File descriptor to read/write
