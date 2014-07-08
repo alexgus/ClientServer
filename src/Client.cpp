@@ -151,6 +151,8 @@ void Client::run()
 
 			cout<<"Client : waiting for an answer .."<<endl;
 			rcv = this->cSocket->readString();
+			while(*rcv == "")
+				rcv = this->cSocket->readString();
 			cout << "Client [RCV] : "<< *rcv <<endl;
 
 			if(*rcv == "Bye !")
