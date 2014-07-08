@@ -128,7 +128,7 @@ void Server::run(ClientData *d)
 		{
 			log.write("Server ["+ *d->getIp() + ":" + *d->getPort() + "][RECV] : " + *str, typeid(*this).name(), Log::DBG);
 			thread t(&Server::handleString,this,d,c,str);
-			t.detach();
+			t.detach(); // TODO Not detach thread
 		}
 	}
 	c->writeString("Bye !");
