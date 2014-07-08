@@ -56,13 +56,14 @@ CmdLine::CmdLine(string commande)
 	//search option
 	while (it != commande.cend())
 	{
-		if(*it!=' ')
+		if(*it != ' ' && *it != '\r' && *it != '\n' && *it != '\0')
 		{
 			// Search end of the option name
 			str = "";
-			while ((it != commande.cend())&& ((*it != ' ')))
-											/*|| (*it != '\r')
-											|| (*it != '\n')))*/
+			while (it != commande.cend() && (*it != ' '
+											&& *it != '\r'
+											&& *it != '\n'
+											&& *it != '\0'))
 			{
 				str = str + *it;
 				++it;
@@ -83,9 +84,10 @@ CmdLine::CmdLine(string commande)
 				{
 					str = "";
 
-					while ((it != commande.cend())&& ((*it != ' ')))
-													/*|| (*it != '\r')
-													|| (*it != '\n')))*/
+					while ( it != commande.cend() && (*it != ' '
+													&& *it != '\r'
+													&& *it != '\n'
+													&& *it != '\0'))
 					{
 						str = str + *it;
 						++it;
