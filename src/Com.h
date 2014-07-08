@@ -66,7 +66,7 @@ public:
 	 * @param size Size to read. By default = BUFFER_SIZE
 	 * @return The data read
 	 */
-	char* readBlob(int size = BUFFER_SIZE);
+	void* readBlob(int size = BUFFER_SIZE);
 
 private:
 	/**

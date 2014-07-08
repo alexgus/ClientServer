@@ -68,7 +68,7 @@ void Com::writeBlob(void* buf, int size)
 	write(this->fd,buf,size);
 }
 
-char* Com::readBlob(int size)
+void* Com::readBlob(int size)
 {
 	char *buf = (char*) malloc(sizeof(char)*size);
 	timeval t = this->timeout;
