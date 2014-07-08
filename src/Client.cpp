@@ -10,6 +10,7 @@
 Client::Client()
 {
 	this->running = false;
+	this->mRunning = new mutex();
 	this->cUser = new Com(fileno(stdin),{2,0});
 	this->cSocket = 0;
 	fd_sock = -1;
@@ -22,6 +23,7 @@ Client::Client()
 Client::Client(string address, int port)
 {
 	this->running = false;
+	this->mRunning = new mutex();
 	fd_sock = -1;
 	this->cUser = new Com(fileno(stdin),{2,0});
 	this->cSocket = 0;
@@ -130,37 +132,60 @@ string* Client::getArch()
 
 void Client::run()
 {
-	string *msg=0, *rcv=0;
+	thread *send, *recv;
 
 	// Connect to the server
 	connection();
 
 	this->running = true;
 
+	recv = new thread(&Client::listenOn,this);
+	send = new thread(&Client::writeCommand,this);
+
+	recv->join();
+	send->join();
+}
+
+void Client::listenOn()
+{
+	string *rcv;
+
+	while(true)
+	{
+		rcv = this->cSocket->readString();
+		while(*rcv == "")
+			rcv = this->cSocket->readString();
+		cout << "Client [RCV] : "<< *rcv <<endl;
+
+		if(*rcv == "Bye !")
+		{
+			cout<<"Client exiting"<<endl;
+			close(fd_sock);
+			this->mRunning->lock();
+			this->running = false;
+			this->mRunning->unlock();
+			return;
+		}
+	}
+}
+
+void Client::writeCommand()
+{
+	string *msg = new string("");
+	this->mRunning->lock();
 	while(this->running)
 	{
+		this->mRunning->unlock();
 		cout << "Client : type a command to send"<<endl;
 
 		msg = this->cUser->readString();
-		while(*msg == "")
-			msg = this->cUser->readString();
-
-		if(msg->length() >= 3)
+		this->mRunning->lock();
+		while(*msg == "" && this->running)
 		{
-			this->cSocket->writeString(*msg);
-
-			cout<<"Client : waiting for an answer .."<<endl;
-			rcv = this->cSocket->readString();
-			while(*rcv == "")
-				rcv = this->cSocket->readString();
-			cout << "Client [RCV] : "<< *rcv <<endl;
-
-			if(*rcv == "Bye !")
-			{
-				cout<<"Client exiting -- Closing socket"<<endl;
-				close(fd_sock);
-				return;
-			}
+			this->mRunning->unlock();
+			msg = this->cUser->readString();
 		}
+
+		this->cSocket->writeString(*msg);
 	}
 }

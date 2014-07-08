@@ -24,6 +24,8 @@
 #include <cstring>
 #include <iostream>
 #include <string>
+#include <thread>
+#include <mutex>
 
 #include "Log.h"
 #include "Com.h"
@@ -47,6 +49,11 @@ private :
 	 * If the client is running
 	 */
 	bool running;
+
+	/**
+	 * Mutex for protect running variable
+	 */
+	mutex *mRunning;
 
 	/**
 	 * The socket file descriptor
@@ -77,6 +84,16 @@ private :
 	 * Communication set of method for the socket (server)
 	 */
 	Com *cSocket;
+
+	/**
+	 * Method for listening on the socket
+	 */
+	void listenOn();
+
+	/**
+	 * Method for writing command to the socket
+	 */
+	void writeCommand();
 
 	/**
 	 * Connect to the host
