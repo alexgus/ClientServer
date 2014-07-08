@@ -39,6 +39,11 @@ private:
 	 */
 	void writeTime();
 
+	/**
+	 * Delete last \0 \r \n in a string
+	 */
+	string* delNonWantedChar(string *s);
+
 public:
 	/**
 	 * Log's level

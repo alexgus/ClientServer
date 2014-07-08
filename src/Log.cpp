@@ -54,7 +54,7 @@ void Log::write(string s, string callClass, LEVEL l)
 #ifndef DEBUG
 	if(l != LEVEL.DBG))
 #endif
-		file << setw(SETW_CLASS) << "[" + string(&callClass.c_str()[1]) + "]\t" << s << endl;
+		file << setw(SETW_CLASS) << "[" + string(&callClass.c_str()[1]) + "]\t" << *this->delNonWantedChar(&s) << endl;
 }
 
 void Log::writeTime()
@@ -70,4 +70,12 @@ void Log::writeTime()
 	file << "[" << buf << "] ";
 }
 
+string* Log::delNonWantedChar(string* s)
+{
+	while(s->at(s->size()-1) == '\n'
+			|| s->at(s->size()-1) == '\r'
+			|| s->at(s->size()-1) == '\0')
+		s->erase(s->end()-1);
+	return s;
+}
 
