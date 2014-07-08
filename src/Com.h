@@ -56,6 +56,13 @@ public:
 
 	/**
 	 * Read byte on the file descriptor
+	 * @param The buffer to write
+	 * @param size Size to read. By default = BUFFER_SIZE
+	 */
+	void writeBlob(char* buf, int size = BUFFER_SIZE);
+
+	/**
+	 * Read byte on the file descriptor
 	 * @param size Size to read. By default = BUFFER_SIZE
 	 * @return The data read
 	 */

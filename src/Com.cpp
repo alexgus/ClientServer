@@ -63,6 +63,11 @@ string* Com::readString()
 	return str;
 }
 
+void Com::writeBlob(char* buf, int size)
+{
+	write(this->fd,buf,size);
+}
+
 char* Com::readBlob(int size)
 {
 	char *buf = (char*) malloc(sizeof(char)*size);
