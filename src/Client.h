@@ -84,19 +84,6 @@ private :
 	 */
 	int connection();
 
-	/**
-	 * Send a command to the server
-	 * @param cmd The command to send
-	 * @return -1 if failed 0 otherwise
-	 */
-	int sendCmd(string* cmd);
-
-	/**
-	 * Receive informations from the server
-	 * @return The string that server sent
-	 */
-	string* receive();
-
 public :
 
 	/**

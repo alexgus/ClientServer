@@ -123,33 +123,3 @@ void Client::run()
 		}
 	}
 }
-
-int Client::sendCmd(string* cmd)
-{
-	log.write("Client [SEND] : "+*cmd,typeid(*this).name(),Log::DBG);
-
-	if(send(fd_sock,cmd->c_str(),cmd->length(),0)==-1)
-	{
-		log.write("Client : Error when sending message",typeid(*this).name(),Log::ERR);
-		return -1;
-	}
-
-	return 0;
-}
-
-string* Client::receive()
-{
-	char buff[BUFFER_SIZE] = "";
-	int size;
-
-	if((size=recv(fd_sock,buff,BUFFER_SIZE,0))==-1)
-	{
-		log.write("Client : Error when receiving message",typeid(*this).name(),Log::ERR);
-		return new string("");
-	}
-
-	buff[size]='\0';
-	log.write("Client [RECV] : "+(string)buff,typeid(*this).name(),Log::DBG);
-
-	return new string(buff);
-}
