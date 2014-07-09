@@ -70,7 +70,11 @@ int ServerCmdHandler::exec(int port) throw(string*)
 				return 0;
 				break;
 			case CmdLine::ERR:
-				// TODO Check if the file exists
+				if(!(fstream(this->PYTHON_FILE+".py").is_open()))
+				{
+					log.write("File " + this->PYTHON_FILE + ".py not found !",typeid(*this).name(), Log::DBG);
+					throw new string("File " + this->PYTHON_FILE + ".py not found !");
+				}
 				this->pyCmd = new PythonModuleLoader(this->PYTHON_FILE,this->PYTHON_FUN);
 				int ret = this->pyCmd->exec(*this->pyModuleStr);
 				delete this->pyCmd;
