@@ -71,7 +71,7 @@ int ServerCmdHandler::exec(int port) throw(string*)
 				break;
 			case CmdLine::ERR:
 				// TODO Check if the file exists
-				this->pyCmd = new PythonModuleLoader(string("server"),string("recv"));
+				this->pyCmd = new PythonModuleLoader(this->PYTHON_FILE,this->PYTHON_FUN);
 				int ret = this->pyCmd->exec(*this->pyModuleStr);
 				delete this->pyCmd;
 				return ret;

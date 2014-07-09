@@ -26,6 +26,17 @@ using namespace std;
 class ServerCmdHandler
 {
 public:
+
+	/**
+	 * File to the python module constant
+	 */
+	const  string PYTHON_FILE = "server";
+
+	/**
+	 * File to the python module constant
+	 */
+	const string PYTHON_FUN = "recv";
+
 	/**
 	 * Class constructor.
 	 */
