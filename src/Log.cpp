@@ -15,18 +15,23 @@ Log::Log()
 	// If the file isn't open, display an error on cerr
 	if(!file.is_open())
 		cerr << endl << ">>> Can't open Log file !" << endl;
+
+	this->mWrite = new mutex();
 }
 
 Log::~Log()
 {
 	// Close file
 	this->file.close();
+	delete this->mWrite;
 }
 
 Log& Log::operator<<(string s)
 {
 	writeTime();
+	this->mWrite->lock();
 	file << s << endl;
+	this->mWrite->unlock();
 	return *this;
 }
 
@@ -38,23 +43,37 @@ void Log::write(string s, string callClass, LEVEL l)
 	{
 #ifdef DEBUG
 		case DBG:
+			this->mWrite->lock();
 			file << setw(SETW_LEVEL) << "[DEBUG]";
+			this->mWrite->unlock();
 			break;
 #endif
 		case WARN:
+			this->mWrite->lock();
 			file << setw(SETW_LEVEL) << "[WARN]";
+			this->mWrite->unlock();
 			break;
 		case ERR:
+			this->mWrite->lock();
 			file << setw(SETW_LEVEL) << "[ERR]";
+			this->mWrite->unlock();
 			break;
 		case INFO:
+			this->mWrite->lock();
 			file << setw(SETW_LEVEL) << "[INFO]";
+			this->mWrite->unlock();
 			break;
 	}
 #ifndef DEBUG
 	if(l != LEVEL.DBG))
+	{
 #endif
+		this->mWrite->lock();
 		file << setw(SETW_CLASS) << "[" + string(&callClass.c_str()[1]) + "]\t" << *this->delNonWantedChar(&s) << endl;
+		this->mWrite->unlock();
+#ifndef DEBUG
+	}
+#endif
 }
 
 void Log::writeTime()
@@ -67,7 +86,9 @@ void Log::writeTime()
 
 	// Forlat time
 	strftime(buf,20,"%D %T",localtime(&timestamp));
+	this->mWrite->lock();
 	file << "[" << buf << "] ";
+	this->mWrite->unlock();
 }
 
 string* Log::delNonWantedChar(string* s)

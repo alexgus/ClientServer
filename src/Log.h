@@ -16,6 +16,7 @@
 #include <string>
 #include <time.h>
 #include <iomanip>
+#include <mutex>
 using namespace std;
 
 #define SETW_LEVEL 7
@@ -33,6 +34,11 @@ private:
 	 * Log's file descriptor
 	 */
 	ofstream file;
+
+	/**
+	 * Mutex for protecting the file from threads
+	 */
+	mutex *mWrite;
 
 	/**
 	 * Write the actual date and time
