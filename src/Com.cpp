@@ -95,7 +95,7 @@ char* Com::readBlob(int size)
 	return 0;
 }
 
-string* Log::delNonWantedChar(string* s)
+string* Com::delNonWantedChar(string* s)
 {
 	while(s->at(s->size()-1) == '\n'
 			|| s->at(s->size()-1) == '\r'
