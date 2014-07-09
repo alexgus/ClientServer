@@ -92,6 +92,12 @@ private:
 	 * The log file
 	 */
 	Log log;
+
+	/**
+	 * Delete last \0 \r \n in a string
+	 */
+	string* delNonWantedChar(string *s);
+
 };
 
 #endif /* COM_H_ */

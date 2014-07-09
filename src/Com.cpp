@@ -58,7 +58,7 @@ string* Com::readString()
 
 		delete str;
 		str = new string(buf);
-		return str;
+		return this->delNonWantedChar(str);
 	}
 
 	return str;
@@ -93,4 +93,13 @@ char* Com::readBlob(int size)
 		return buf;
 	}
 	return 0;
+}
+
+string* Log::delNonWantedChar(string* s)
+{
+	while(s->at(s->size()-1) == '\n'
+			|| s->at(s->size()-1) == '\r'
+			|| s->at(s->size()-1) == '\0')
+		s->erase(s->end()-1);
+	return s;
 }
