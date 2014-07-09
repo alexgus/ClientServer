@@ -139,17 +139,25 @@ void Server::handleString(ClientData *d, Com *c, string* s)
 {
 	ServerCmdHandler *cmdHandler = new ServerCmdHandler(*s);
 
-	switch(cmdHandler->exec(d->getFd()))
+	try
 	{
-		case 0: // QUIT
-			d->stopClient();
-			break;
-		case 1:
-			c->writeString("OK : " + *s);
-			break;
-		case -1:
-			c->writeString("Command not recognized : " + *s);
-			break;
+		switch(cmdHandler->exec(d->getFd()))
+		{
+			case 0: // QUIT
+				d->stopClient();
+				break;
+			case 1:
+				c->writeString("OK : " + *s);
+				break;
+			case -1:
+				c->writeString("Command not recognized : " + *s);
+				break;
+		}
+	}
+	catch (string* err)
+	{
+		c->writeString(">> " + *err);
+		delete err;
 	}
 
 	delete cmdHandler;

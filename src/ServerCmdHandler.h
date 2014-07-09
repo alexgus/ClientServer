@@ -51,8 +51,9 @@ public:
 	/**
 	 * Execute the command
 	 * @return 1 if ok, -1 if not ok, 0 if quit command
+	 * @throw Error string
 	 */
-	int exec(int port);
+	int exec(int port) throw(string*);
 
 	/**
 	 * Override operator =

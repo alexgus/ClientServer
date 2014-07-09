@@ -43,7 +43,7 @@ ServerCmdHandler& ServerCmdHandler::operator=(ServerCmdHandler &s)
 	return s;
 }
 
-int ServerCmdHandler::exec(int port)
+int ServerCmdHandler::exec(int port) throw(string*)
 {
 	vector<CmdOption*>::iterator it;
 
@@ -52,15 +52,14 @@ int ServerCmdHandler::exec(int port)
 		switch(this->cmd->getCmd())
 		{
 			case CmdLine::GET:
-				it = cmd->getOptions()->begin();
+				it = cmd->getOptions()->begin(); // Place on -f
 				while(it != cmd->getOptions()->end() && (*it)->getOption() != "-f")
 					++it;
 
 				if(it == cmd->getOptions()->end())
-				{ // TODO DEBUG
-					cout << "No valid options" << endl;
-					return -1;
-				}
+					throw new string("No valid option !"); // TODO Add help
+				if(!(fstream((*it)->getValue()).is_open()))
+					throw new string("File " + (*it)->getValue() + " does not exist !");
 				else
 				{
 					SendFile *s = new SendFile((*it)->getValue(),port);
