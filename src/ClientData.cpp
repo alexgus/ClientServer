@@ -10,11 +10,15 @@
 string* convUByteToString(uint16_t ubyte)
 {
 	// TODO Verify indianness
+	string *str;
 	char *buf = (char*) malloc(sizeof(char)*4);
 
 	sprintf(buf, "%hu", ubyte);
 
-	return new string(buf);
+	str = new string(buf);
+	free(buf);
+
+	return str;
 }
 
 
@@ -34,9 +38,11 @@ ClientData::ClientData(sockaddr* s, int fd, struct statvfs *fs, string *arch)
 	ip[3] = convUByteToString(this->addrClient->sa_data[5]);
 	this->ip = new string(*ip[0] + string(".") + *ip[1] + string(".") + *ip[2] + string(".") + *ip[3]);
 
+	for(int i = 0; i< 4 ; ++i)
+		delete ip[i];
+
 	// Stock port
-	unsigned short port = (this->addrClient->sa_data[0] << 8) | this->addrClient->sa_data[1];
-	this->port = new string(*convUByteToString(port));
+	this->port = convUByteToString((this->addrClient->sa_data[0] << 8) | this->addrClient->sa_data[1]);
 
 	// Filesystem statistic
 	this->statfs = fs;
@@ -50,9 +56,13 @@ ClientData::ClientData(sockaddr* s, int fd, struct statvfs *fs, string *arch)
 
 ClientData::~ClientData()
 {
+	delete this->ip;
+	delete this->port;
 	delete this->mRun;
 	delete this->t;
+	delete this->arch;
 	free(this->addrClient);
+	free(this->statfs);
 	close(fd);
 }
 

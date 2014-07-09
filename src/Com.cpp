@@ -56,6 +56,7 @@ string* Com::readString()
 		nbRead = read(fd,buf,BUFFER_SIZE-1);
 		buf[nbRead] = '\0'; // Add end of string
 
+		delete str;
 		str = new string(buf);
 		return str;
 	}

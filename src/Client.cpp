@@ -42,7 +42,7 @@ Client::~Client()
 
 int Client::initHostInfo(string address, int port)
 {
-	char const * p = to_string(port).c_str();
+	char const *p = to_string(port).c_str();
 	int status = getaddrinfo(address.c_str() , p, &host_info, &host_info_list);
 	if(status != 0)
 	{
@@ -90,6 +90,7 @@ int Client::connection()
 	// MDP
 
 	free(fs);
+	delete arch;
 
 	return status;
 }
@@ -144,6 +145,9 @@ void Client::run()
 
 	recv->join();
 	send->join();
+
+	delete recv;
+	delete send;
 }
 
 void Client::listenOn()
@@ -154,7 +158,10 @@ void Client::listenOn()
 	{
 		rcv = this->cSocket->readString();
 		while(*rcv == "")
+		{
+			delete rcv;
 			rcv = this->cSocket->readString();
+		}
 		cout << "Client [RCV] : "<< *rcv <<endl;
 
 		if(*rcv == "Bye !")
@@ -164,8 +171,10 @@ void Client::listenOn()
 			this->mRunning->lock();
 			this->running = false;
 			this->mRunning->unlock();
+			delete rcv;
 			return;
 		}
+		delete rcv;
 	}
 }
 
@@ -183,9 +192,11 @@ void Client::writeCommand()
 		while(*msg == "" && this->running)
 		{
 			this->mRunning->unlock();
+			delete msg;
 			msg = this->cUser->readString();
 		}
 
 		this->cSocket->writeString(*msg);
+		delete msg;
 	}
 }
