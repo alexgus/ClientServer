@@ -24,18 +24,14 @@ ServerCmdHandler::ServerCmdHandler(CmdLine &c)
 ServerCmdHandler::ServerCmdHandler(string &s)
 {
 	this->cmd = new CmdLine(s);
+	this->pyCmd = NULL;
 	if(this->cmd->getCmd() == CmdLine::ERR)
-	{
-		// TODO Check if the file exists
-		 this->pyCmd = new PythonModuleLoader(string("server"),string("recv"));
 		 this->pyModuleStr = &s;
-	}
 }
 
 ServerCmdHandler::~ServerCmdHandler()
 {
 	delete this->cmd;
-	delete this->pyCmd;
 }
 
 ServerCmdHandler& ServerCmdHandler::operator=(ServerCmdHandler &s)
@@ -74,7 +70,11 @@ int ServerCmdHandler::exec(int port) throw(string*)
 				return 0;
 				break;
 			case CmdLine::ERR:
-				return this->pyCmd->exec(*this->pyModuleStr);
+				// TODO Check if the file exists
+				this->pyCmd = new PythonModuleLoader(string("server"),string("recv"));
+				int ret = this->pyCmd->exec(*this->pyModuleStr);
+				delete this->pyCmd;
+				return ret;
 				break;
 		}
 	}
