@@ -84,7 +84,7 @@ int Client::connection()
 
 	// TODO change dir
 	struct statvfs *fs = (struct statvfs*) malloc(sizeof(struct statvfs));
-	statvfs(".",fs);
+	statvfs(g_conf.Get("FILES","PRIVATE_FOLDER",".").c_str(),fs);
 	this->cSocket->writeBlob(fs,sizeof(struct statvfs));
 
 	// arm or x86 ?

@@ -29,6 +29,9 @@
 
 #include "Log.h"
 #include "Com.h"
+#include "iniparseur/INIReader.h"
+
+extern INIReader g_conf;
 
 using namespace std;
 
