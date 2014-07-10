@@ -19,6 +19,18 @@ Log::Log()
 	this->mWrite = new mutex();
 }
 
+Log::Log(string filename)
+{
+	// Opening in write-only and append to the next
+	this->file.open(filename.c_str(), std::ofstream::out | std::ofstream::app);
+
+	// If the file isn't open, display an error on cerr
+	if(!file.is_open())
+		cerr << endl << ">>> Can't open Log file !" << endl;
+
+	this->mWrite = new mutex();
+}
+
 Log::~Log()
 {
 	// Close file

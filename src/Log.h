@@ -62,6 +62,12 @@ public:
 	Log();
 
 	/**
+	 * Class' constructor
+	 * @param file Log file
+	 */
+	Log(string filename);
+
+	/**
 	 * Class' destructor
 	 */
 	virtual ~Log();
