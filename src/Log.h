@@ -88,6 +88,4 @@ public:
 	Log& operator<<(string s);
 };
 
-const string Log::FILENAME = "SCP.log";
-
 #endif /* LOG_H_ */

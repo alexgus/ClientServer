@@ -7,6 +7,8 @@
 
 #include "Log.h"
 
+const string Log::FILENAME = "SCP.log";
+
 Log::Log()
 {
 	// Opening in write-only and append to the next

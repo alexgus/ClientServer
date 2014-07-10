@@ -7,6 +7,9 @@
 
 #include "Client.h"
 
+const int Client::PORT = 2371;
+const string Client::HOST = "127.0.0.1";
+
 Client::Client()
 {
 	this->running = false;
