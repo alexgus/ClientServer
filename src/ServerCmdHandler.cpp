@@ -7,6 +7,9 @@
 
 #include "ServerCmdHandler.h"
 
+const string ServerCmdHandler::PYTHON_FILE = "server";
+const string ServerCmdHandler::PYTHON_FUN = "recv";
+
 ServerCmdHandler::ServerCmdHandler()
 {
 	this->cmd = NULL;
@@ -27,6 +30,8 @@ ServerCmdHandler::ServerCmdHandler(string &s)
 	this->pyCmd = NULL;
 	if(this->cmd->getCmd() == CmdLine::ERR)
 		 this->pyModuleStr = &s;
+	this->pyFile = g_conf.Get("Python","SERVER_FILE",this->PYTHON_FILE);
+	this->pyFun = g_conf.Get("Python","SERVER_RECV",this->PYTHON_FUN);
 }
 
 ServerCmdHandler::~ServerCmdHandler()
@@ -70,12 +75,12 @@ int ServerCmdHandler::exec(int port) throw(string*)
 				return 0;
 				break;
 			case CmdLine::ERR:
-				if(!(fstream(this->PYTHON_FILE+".py").is_open()))
+				if(!(fstream(this->pyFile+".py").is_open()))
 				{
-					log.write("File " + this->PYTHON_FILE + ".py not found !",typeid(*this).name(), Log::DBG);
-					throw new string("File " + this->PYTHON_FILE + ".py not found !");
+					log.write("File " + this->pyFile + ".py not found !",typeid(*this).name(), Log::DBG);
+					throw new string("File " + this->pyFile + ".py not found !");
 				}
-				this->pyCmd = new PythonModuleLoader(this->PYTHON_FILE,this->PYTHON_FUN);
+				this->pyCmd = new PythonModuleLoader(this->pyFile,this->pyFun);
 				int ret = this->pyCmd->exec(*this->pyModuleStr);
 				delete this->pyCmd;
 				return ret;

@@ -30,12 +30,12 @@ public:
 	/**
 	 * File to the python module constant
 	 */
-	const  string PYTHON_FILE = "server";
+	static const  string PYTHON_FILE;
 
 	/**
 	 * File to the python module constant
 	 */
-	const string PYTHON_FUN = "recv";
+	static const string PYTHON_FUN;
 
 	/**
 	 * Class constructor.
@@ -82,6 +82,16 @@ private:
 	 * Log file
 	 */
 	Log log;
+
+	/**
+	 * Python file to load
+	 */
+	string pyFile;
+
+	/**
+	 * Function in python file to load
+	 */
+	string pyFun;
 
 	/**
 	 * For sending commands to python modules
