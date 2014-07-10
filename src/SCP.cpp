@@ -6,14 +6,20 @@
 #include <signal.h>
 #include <thread>
 
+#include "iniparseur/INIReader.h"
+
 #include "Log.h"
 #include "Server.h"
 #include "Client.h"
+
+#define SCP_CONF "./SCP.conf"
+
 using namespace std;
+
+INIReader g_conf(SCP_CONF);
 
 void cleanAndStop();
 
-Log l;
 Server *serv = NULL;
 Client *client = NULL;
 thread *th_serv = NULL;
@@ -22,6 +28,14 @@ thread *th_client = NULL;
 int main()
 {
 // Declaration/Initialization
+	if(g_conf.ParseError() < 0)
+	{
+		cout << SCP_CONF << " : Problem with the configuration file" << endl;
+		return EXIT_FAILURE;
+	}
+
+	Log l(g_conf.Get("Log","LOG_FILE","SCP.log"));
+
 	serv = new Server();
 	client = new Client(HOST,PORT);
 
@@ -61,7 +75,7 @@ int main()
 	delete th_client;
 
 // End
-	return 0;
+	return EXIT_SUCCESS;
 }
 
 void cleanAndStop()
