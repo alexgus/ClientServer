@@ -7,16 +7,15 @@
 #include <thread>
 
 #include "iniparseur/INIReader.h"
+#define SCP_CONF "./SCP.conf"
+
+INIReader g_conf(SCP_CONF);
 
 #include "Log.h"
 #include "Server.h"
 #include "Client.h"
 
-#define SCP_CONF "./SCP.conf"
-
 using namespace std;
-
-INIReader g_conf(SCP_CONF);
 
 void cleanAndStop();
 

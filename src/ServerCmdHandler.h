@@ -17,8 +17,11 @@
 #include "CmdOption.h"
 #include "SendFile.h"
 #include "PythonModuleLoader.h"
+#include "iniparseur/INIReader.h"
 
 using namespace std;
+
+extern INIReader g_conf;
 
 /**
  * Handle commands sent by the client to the server
