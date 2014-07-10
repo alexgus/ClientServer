@@ -7,6 +7,8 @@
 
 #include "Server.h"
 
+const int Server::PORT = 2371;
+
 Server::Server()
 {
 	log.write("Initialize Server",typeid(*this).name(),Log::DBG);

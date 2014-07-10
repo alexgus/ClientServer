@@ -42,7 +42,7 @@ public:
 	/**
 	 * The waiting port of the application
 	 */
-	const static int PORT = 2371;
+	static const int PORT;
 
 	/**
 	 * Timeout of select (in seconds)
