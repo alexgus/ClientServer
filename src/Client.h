@@ -32,10 +32,6 @@
 
 using namespace std;
 
-//Target host details:
-#define PORT  2371
-#define HOST "127.0.0.1"
-
 class Client
 {
 private :
@@ -109,6 +105,16 @@ private :
 public :
 
 	/**
+	 * Default port of the client will connect
+	 */
+	static const int PORT;
+
+	/**
+	 * Default host of the client will connect
+	 */
+	static const string HOST;
+
+	/**
 	 * Default constructor
 	 */
 	Client();
@@ -139,5 +145,7 @@ public :
 	void run();
 };
 
+const int Client::PORT = 2371;
+const string Client::HOST = "127.0.0.1";
 
 #endif /* CLIENT_H_ */

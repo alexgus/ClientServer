@@ -25,10 +25,6 @@ using namespace std;
 class Log
 {
 private:
-	/**
-	 * The log's filename
-	 */
-	string FILENAME = "SCP.log";
 
 	/**
 	 * Log's file descriptor
@@ -51,6 +47,11 @@ private:
 	string* delNonWantedChar(string *s);
 
 public:
+	/**
+	 * The log's filename
+	 */
+	static const string FILENAME;
+
 	/**
 	 * Log's level
 	 */
@@ -86,5 +87,7 @@ public:
 	 */
 	Log& operator<<(string s);
 };
+
+const string Log::FILENAME = "SCP.log";
 
 #endif /* LOG_H_ */

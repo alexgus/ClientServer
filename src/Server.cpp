@@ -33,6 +33,32 @@ Server::Server()
 	listen(fd_sock, 5); // 5 = limit size of the connection queue
 }
 
+Server::Server(int port)
+{
+	log.write("Initialize Server",typeid(*this).name(),Log::DBG);
+
+	this->lClient = new vector<ClientData*>();
+
+	// Create the socket
+	fd_sock = socket(AF_INET, SOCK_STREAM, 0);
+	if(fd_sock == -1)
+		log.write("Socket creation error : " + string(strerror(errno)),typeid(*this).name(),Log::ERR);
+
+	int optVal =1;
+	if(setsockopt(fd_sock,SOL_SOCKET,SO_REUSEADDR ,&optVal,sizeof(int)) == -1)
+		log.write("Server : Failed to change socket option : " + string(strerror(errno)),typeid(*this).name(),Log::ERR);
+
+	// Bind the socket to the system
+	addr.sin_family = AF_INET;
+	addr.sin_addr.s_addr = htonl(INADDR_ANY); // Conversion big indian
+	addr.sin_port = htons(port);
+	if(bind(fd_sock,(struct sockaddr *) &addr, sizeof(addr)) == -1)
+		log.write("Binding error : " + string(strerror(errno)),typeid(*this).name(),Log::ERR);
+
+	// Set the listen queue
+	listen(fd_sock, 5); // 5 = limit size of the connection queue
+}
+
 Server::~Server()
 {
 	if(fd_sock != -1)

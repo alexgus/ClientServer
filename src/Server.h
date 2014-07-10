@@ -111,6 +111,12 @@ public:
 	Server();
 
 	/**
+	 * Constructor of the class.
+	 * Initialize a socket with a port and an address.
+	 */
+	Server(int port);
+
+	/**
 	 * Destroyer of the class.
 	 * Delete the socket and stop connection with clients
 	 */
