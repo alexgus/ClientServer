@@ -34,10 +34,10 @@ int main()
 		return EXIT_FAILURE;
 	}
 
-	Log l(g_conf.Get("Log","LOG_FILE","SCP.log"));
+	Log l(g_conf.Get("Log","LOG_FILE",Log::FILENAME));
 
-	serv = new Server();
-	client = new Client(HOST,PORT);
+	serv = new Server(g_conf.GetInteger("Server","PORT",Server::PORT));
+	client = new Client(g_conf.Get("FirstConnection","IP",Client::HOST),g_conf.GetInteger("FirstConnection","PORT",Client::PORT));
 
 // Run
 	// Launch Server
