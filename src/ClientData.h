@@ -64,19 +64,34 @@ private:
 	mutex *mRun;
 
 	/**
-	 * Filesystem statistic
+	 * Filesystem statistic on shared mounting point
 	 */
-	struct statvfs *statfs;
+	struct statvfs *statfsShared;
 
 	/**
-	 * Total disk space
+	 * Total disk space on share folder mounting point
 	 */
-	unsigned long disk_size;
+	unsigned long disk_sizeShared;
 
 	/**
-	 * Free space on disk
+	 * Free space on disk on share folder mounting point
 	 */
-	unsigned long disk_free;
+	unsigned long disk_freeShared;
+
+	/**
+	 * Filesystem statistic on private mounting point
+	 */
+	struct statvfs *statfsPrivate;
+
+	/**
+	 * Total disk space on private folder mounting point
+	 */
+	unsigned long disk_sizePrivate;
+
+	/**
+	 * Free space on disk on private folder mounting point
+	 */
+	unsigned long disk_freePrivate;
 
 	/**
 	 * String to defines the arch
@@ -88,7 +103,7 @@ public:
 	/**
 	 * Default constructor. Construct a client with all needed information
 	 */
-	ClientData(sockaddr* s, int fd, struct statvfs *fs, string *arch);
+	ClientData(sockaddr* s, int fd, struct statvfs *fs, struct statvfs *fsP, string *arch);
 
 	/**
 	 * Default destroyer

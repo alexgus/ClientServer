@@ -22,7 +22,7 @@ string* convUByteToString(uint16_t ubyte)
 }
 
 
-ClientData::ClientData(sockaddr* s, int fd, struct statvfs *fs, string *arch)
+ClientData::ClientData(sockaddr* s, int fd, struct statvfs *fs, struct statvfs *fsP, string *arch)
 {
 	this->t = 0;
 	this->addrClient = s;
@@ -45,10 +45,12 @@ ClientData::ClientData(sockaddr* s, int fd, struct statvfs *fs, string *arch)
 	this->port = convUByteToString((this->addrClient->sa_data[0] << 8) | this->addrClient->sa_data[1]);
 
 	// Filesystem statistic
-	this->statfs = fs;
-
-	this->disk_size = fs->f_frsize * fs->f_blocks;
-	this->disk_free = fs->f_frsize * fs->f_bfree;
+	this->statfsShared = fs;
+	this->statfsPrivate = fsP;
+	this->disk_sizeShared = fs->f_frsize * fs->f_blocks;
+	this->disk_freeShared = fs->f_frsize * fs->f_bfree;
+	this->disk_sizePrivate = fsP->f_frsize * fsP->f_blocks;
+	this->disk_freePrivate = fsP->f_frsize * fsP->f_bfree;
 
 	// Arch
 	this->arch = arch;
@@ -62,7 +64,7 @@ ClientData::~ClientData()
 	delete this->t;
 	delete this->arch;
 	free(this->addrClient);
-	free(this->statfs);
+	free(this->statfsShared);
 	close(fd);
 }
 

@@ -82,14 +82,20 @@ int Client::connection()
 
 	// TODO server ask for information
 
-	// TODO change dir
+	// Share dir
 	struct statvfs *fs = (struct statvfs*) malloc(sizeof(struct statvfs));
-	statvfs(g_conf.Get("FILES","PRIVATE_FOLDER",".").c_str(),fs);
+	statvfs(g_conf.Get("FILES","SHARED_FOLDER",".").c_str(),fs);
 	this->cSocket->writeBlob(fs,sizeof(struct statvfs));
+
+	// Private dir
+	struct statvfs *fsP = (struct statvfs*) malloc(sizeof(struct statvfs));
+	statvfs(g_conf.Get("FILES","PRIVATE_FOLDER",".").c_str(),fsP);
+	this->cSocket->writeBlob(fsP,sizeof(struct statvfs));
 
 	// arm or x86 ?
 	string *arch = this->getArch();
 	this->cSocket->writeString(*arch);
+
 	// MDP
 
 	free(fs);
