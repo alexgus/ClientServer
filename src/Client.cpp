@@ -80,8 +80,6 @@ int Client::connection()
 
 	this->cSocket = new Com(this->fd_sock,{2,0});
 
-	// TODO server ask for information
-
 	// Share dir
 	struct statvfs *fs = (struct statvfs*) malloc(sizeof(struct statvfs));
 	statvfs(g_conf.Get("FILES","SHARED_FOLDER",".").c_str(),fs);
@@ -96,7 +94,7 @@ int Client::connection()
 	string *arch = this->getArch();
 	this->cSocket->writeString(*arch);
 
-	// MDP
+	// TODO Ask or not for MDP ? Conf File ?
 
 	free(fs);
 	delete arch;
