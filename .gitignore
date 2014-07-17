@@ -7,7 +7,6 @@
 /DebugPi
 /ReleasePC
 /ReleasePi
-/.project~
 /.settings
 /*.send
 /.pydevproject
@@ -16,6 +15,5 @@
 /perf.data
 /oprofile_data
 /SCP.log
-/perf.data.old
-/SCP.log~
-/README.md~
+/*.old
+/*~
