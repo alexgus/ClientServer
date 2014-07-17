@@ -21,3 +21,5 @@
 /Debug/src/iniparser/*.d
 /Debug/src/iniparser/*.o
 /Debug
+/DebugClient/
+/DebugServer/
