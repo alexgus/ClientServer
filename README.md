@@ -34,4 +34,6 @@ The client will continue until the `Bye !` of the server
     serv = new Server(<PORT>);
     serv->acceptConnection();
 For stopping the server :
-    serv->stopServer();
+     serv->stopServer();
+     
+    
